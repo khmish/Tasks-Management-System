@@ -12,6 +12,19 @@ import java.util.ArrayList;
  * @author khmish
  */
 public class UserTable {
+
+    private Connector conn;
+    
+    // the construct is providing connection to DB
+    public UserTable() {
+                            //user ,pass, url
+        conn= new Connector(""  , ""    , "");
+        if(conn.connectTo()){
+            System.out.println("connected!");
+        }
+        
+    }
+    
     
     public boolean Insert(Users user)
     {
@@ -29,7 +42,7 @@ public class UserTable {
     {
         return false;
     }
-    public ArrayList Search(Users user)
+    public ArrayList Search(String criteria)
     {
         return null;
     }
