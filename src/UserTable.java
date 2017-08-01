@@ -29,6 +29,10 @@ public class UserTable {
     {
         return false;
     }
+    public ArrayList Search(Users user)
+    {
+        return null;
+    }
     public Users getUser(Users user)
     {
         return null;
