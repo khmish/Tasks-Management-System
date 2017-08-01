@@ -15,15 +15,14 @@ public class Users {
     private String lastName;
     private String unitId;
 
-    
-    public Users(String userName,String firstName,String lastName,String unitId) {
-        
-        this.userName=userName;
-        this.firstName=firstName;
-        this.lastName=lastName;
-        this.unitId=unitId;
+    public Users(String userName, String firstName, String lastName, String unitId) {
+
+        this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.unitId = unitId;
     }
-    
+
     /**
      * Get the value of unitId
      *
@@ -32,6 +31,7 @@ public class Users {
     public String getUnitCode() {
         return unitId;
     }
+
     /**
      * Set the value of unitId
      *
@@ -40,6 +40,7 @@ public class Users {
     public void setUnitCode(String unitId) {
         this.unitId = unitId;
     }
+
     /**
      * Get the value of lastName
      *
@@ -48,6 +49,7 @@ public class Users {
     public String getLastName() {
         return lastName;
     }
+
     /**
      * Set the value of lastName
      *
@@ -56,9 +58,11 @@ public class Users {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     public String getUserName() {
         return userName;
     }
+
     /**
      * Set the value of userName
      *
@@ -67,9 +71,11 @@ public class Users {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
     public String getFirstName() {
         return firstName;
     }
+
     /**
      * Set the value of firstName
      *
@@ -78,6 +84,5 @@ public class Users {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
 
 }
