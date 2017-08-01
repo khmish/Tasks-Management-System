@@ -16,16 +16,16 @@ import java.util.logging.Logger;
  */
 public class Connector {
 
-    String URL = "jdbc:oracle:thin:@amrood:1521:EMP";//example
-    String USER = "username";
-    String PASS = "password";
-    Connection conn;
+    private String URL = "jdbc:oracle:thin:@amrood:1521:EMP";//example
+    private String USER = "username";
+    private String PASS = "password";
+    private Connection conn;
 
     public Connector(String user,String Pass,String url) 
     {
-        USER=user;
-        PASS=Pass;
-        URL=url;
+        this.USER=user;
+        this.PASS=Pass;
+        this.URL=url;
     }
 
     public boolean connectTo() {
