@@ -19,7 +19,7 @@ public class Connector {
     private String URL = "jdbc:oracle:thin:@amrood:1521:EMP";//example
     private String USER = "username";
     private String PASS = "password";
-    private Connection conn;
+    public Connection conn;
 
     public Connector(String user,String Pass,String url) 
     {
