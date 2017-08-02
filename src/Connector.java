@@ -16,9 +16,9 @@ import java.util.logging.Logger;
  */
 public class Connector {
 
-    private String URL = "jdbc:oracle:thin:@amrood:1521:EMP";//example
-    private String USER = "username";
-    private String PASS = "password";
+    private String URL = "jdbc:mysql://108.167.137.228/imakkico_tms_db";//example
+    private String USER = "imakkico_tms";
+    private String PASS = "TMS20tms17";
     public Connection conn;
 
     public Connector(String user,String Pass,String url) 
@@ -30,9 +30,12 @@ public class Connector {
 
     public boolean connectTo() {
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             this.conn = DriverManager.getConnection(URL, USER, PASS);
             return true;
         } catch (SQLException ex) {
+            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
