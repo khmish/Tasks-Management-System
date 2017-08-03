@@ -19,9 +19,7 @@ public class Connector {
     private String URL = "jdbc:mysql://108.167.137.228:3306/imakkico_tms_db";
     private String USER = "imakkico_tms";
     private String PASS = "TMS20tms17";
-    //private String UserAndPaa = "user=\"imakkico_tms\"&password=\"TMS20tms17\"";
     public Connection conn;
-    Statement stmt;
 
     public Connector(String user,String Pass,String url) 
     {
@@ -40,7 +38,6 @@ public class Connector {
             
             Class.forName("com.mysql.jdbc.Driver");
             this.conn = DriverManager.getConnection(URL, USER, PASS);
-            //this.conn = DriverManager.getConnection(URL + UserAndPaa);
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,7 +74,7 @@ public class Connector {
     
     public ResultSet query(String query){
         try {
-            stmt = conn.createStatement();
+            Statement stmt = conn.createStatement();
             return stmt.executeQuery(query);
         } catch (SQLException ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
