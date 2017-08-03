@@ -22,7 +22,7 @@ public class UserTable {
     public UserTable() {
         //user ,pass, url
         connector = new Connector("", "", "");
-        if (connector.connectTo()) {
+        if (connector.connect()) {
             System.out.println("connected!");
         }
 

@@ -16,10 +16,12 @@ import java.util.logging.Logger;
  */
 public class Connector {
 
-    private String URL = "jdbc:mysql://108.167.137.228/imakkico_tms_db";//example
+    private String URL = "jdbc:mysql://108.167.137.228:3306/imakkico_tms_db";
     private String USER = "imakkico_tms";
     private String PASS = "TMS20tms17";
+    private String UserAndPaa = "user=\"imakkico_tms\"&password=\"TMS20tms17\"";
     public Connection conn;
+    Statement stmt;
 
     public Connector(String user,String Pass,String url) 
     {
@@ -27,15 +29,26 @@ public class Connector {
         this.PASS=Pass;
         this.URL=url;
     }
+    
+    public Connector() 
+    {
+        
+    }
 
-    public boolean connectTo() {
+    public boolean connect() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
             this.conn = DriverManager.getConnection(URL, USER, PASS);
+            //this.conn = DriverManager.getConnection(URL + UserAndPaa);
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        }
+        catch (ClassNotFoundException ex) {
+                Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
@@ -50,6 +63,8 @@ public class Connector {
         }
         return false;
     }
+    
+    
     public boolean isConnected()
     {
         try {
@@ -59,13 +74,33 @@ public class Connector {
             }
             else
             {
-                return connectTo();
+                return connect();
             }
         } catch (SQLException ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
             
            return false;
+    }
+    
+    public ResultSet query(String query){
+        try {
+            stmt = conn.createStatement();
+            return stmt.executeQuery(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public boolean hasConnection(){
+        boolean Connected = connect();
+        if (Connected){
+            close();
+            return true;
+        }
+        return false;
+            
     }
 
 }
