@@ -39,7 +39,6 @@ public class Connector {
         try {
             
             Class.forName("com.mysql.jdbc.Driver");
-            System.out.println("HHHHHHH");
             this.conn = DriverManager.getConnection(URL, USER, PASS);
             //this.conn = DriverManager.getConnection(URL + UserAndPaa);
             return true;
@@ -62,22 +61,18 @@ public class Connector {
     }
     
     
-    public boolean isConnected()
+    public boolean isConnected() throws SQLException
     {
-        try {
-            if(conn.isClosed())
-            {
-                return false;
-            }
-            else
-            {
-                return connect();
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+        return !conn.isClosed();
+    }
+    
+    public boolean hasConnection(){
+        if (connect()){
+            close();
+            return true;
         }
+        return false;
             
-           return false;
     }
     
     public ResultSet query(String query){
@@ -89,15 +84,4 @@ public class Connector {
         }
         return null;
     }
-    
-    public boolean hasConnection(){
-        boolean Connected = connect();
-        if (Connected){
-            close();
-            return true;
-        }
-        return false;
-            
-    }
-
 }
