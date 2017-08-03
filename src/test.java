@@ -9,5 +9,7 @@
  * @author salehalmakki
  */
 public class test {
-    
+    test(){
+        
+    }
 }
