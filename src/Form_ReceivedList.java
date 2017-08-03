@@ -136,11 +136,13 @@ public class Form_ReceivedList extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        //java.awt.EventQueue.invokeLater(new Runnable() {
-            //public void run() {
-                //new Form_ReceivedList().setVisible(true);
-            //}
-        //});
+        /*
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Form_ReceivedList().setVisible(true);
+            }
+        });
+                */
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

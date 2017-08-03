@@ -19,7 +19,7 @@ public class Connector {
     private String URL = "jdbc:mysql://108.167.137.228:3306/imakkico_tms_db";
     private String USER = "imakkico_tms";
     private String PASS = "TMS20tms17";
-    private String UserAndPaa = "user=\"imakkico_tms\"&password=\"TMS20tms17\"";
+    //private String UserAndPaa = "user=\"imakkico_tms\"&password=\"TMS20tms17\"";
     public Connection conn;
     Statement stmt;
 
@@ -37,18 +37,15 @@ public class Connector {
 
     public boolean connect() {
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            
+            Class.forName("com.mysql.jdbc.Driver");
+            System.out.println("HHHHHHH");
             this.conn = DriverManager.getConnection(URL, USER, PASS);
             //this.conn = DriverManager.getConnection(URL + UserAndPaa);
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (ClassNotFoundException ex) {
-                Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
