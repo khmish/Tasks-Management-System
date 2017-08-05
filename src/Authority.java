@@ -8,7 +8,7 @@
  *
  * @author khmish
  */
-public class Authorities {
+public class Authority {
     
     private String unitCode;
     

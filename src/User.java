@@ -8,14 +8,14 @@
  *
  * @author khmish
  */
-public class Users {
+public class User {
 
     private String userName;
     private String firstName;
     private String lastName;
     private String unitId;
 
-    public Users(String userName, String firstName, String lastName, String unitId) {
+    public User(String userName, String firstName, String lastName, String unitId) {
 
         this.userName = userName;
         this.firstName = firstName;

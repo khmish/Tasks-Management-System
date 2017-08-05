@@ -13,20 +13,23 @@ import java.util.Date;
  */
 public class Task {
     private int task_id;
-    private Date date_created;
-    private String assigned_by;
-    private String assigned_to;
+    private String created_date;
+    private String assignor;
+    private String assignee;
     private String subject;
     private String details;
-    private Date due_date;
+    private String due_date;
     int status;
     String unit_code;
     
-    Task(int task_id, Date date_created, String assigned_by, String assigned_to, String subject, String details, Date due_date, int status, String unit_code){
+    Task(){
+        
+    }
+    Task(int task_id, String created_date, String assignor, String assignee, String subject, String details, String due_date, int status, String unit_code){
         this.task_id = task_id;
-        this.date_created = date_created;
-        this.assigned_by = assigned_by;
-        this.assigned_to =assigned_to;
+        this.created_date = created_date;
+        this.assignor = assignor;
+        this.assignee =assignee;
         this.subject = subject;
         this.details = details;
         this.due_date = due_date;
@@ -34,32 +37,32 @@ public class Task {
         this.unit_code = unit_code;
     }
     
-    public void setTask_id(int task_id){
+    public void setTaskID(int task_id){
         this.task_id = task_id;
     }
-    public int getTask_id(){
+    public int getTaskID(){
         return this.task_id;
     }
     
-    public void setDate_created(Date date_created){
-        this.date_created = date_created;
+    public void setCreatedDate(String created_date){
+        this.created_date = created_date;
     }
-    public Date getDate_created(){
-        return this.date_created;
-    }
-    
-    public void setAssigned_by(String assigned_by){
-        this.assigned_by = assigned_by;
-    }
-    public String getAssigned_by(){
-        return this.assigned_by;
+    public String getCreatedDate(){
+        return this.created_date;
     }
     
-    public void setAssigned_to(String assigned_to){
-        this.assigned_to = assigned_to;
+    public void setAssignor(String assignor){
+        this.assignor = assignor;
     }
-    public String getAssigned_to(){
-        return this.assigned_by;
+    public String getAssignor(){
+        return this.assignor;
+    }
+    
+    public void setAssignee(String assignee){
+        this.assignee = assignee;
+    }
+    public String getAssignee(){
+        return this.assignee;
     }
     
     public void setSubject(String subject){
@@ -76,10 +79,10 @@ public class Task {
         return this.details;
     }
     
-     public void setDue_date(Date due_date){
+     public void setDueDate(String due_date){
         this.due_date = due_date;
     }
-    public Date getDue_date(){
+    public String getDueDate(){
         return this.due_date;
     }
     
@@ -90,7 +93,7 @@ public class Task {
         return this.status;
     }
     
-    public void setUnit_code(String unit_code){
+    public void setUnitCode(String unit_code){
         this.unit_code = unit_code;
     }
     public String getUnitCode(){

@@ -16,19 +16,19 @@ import java.util.logging.Logger;
  */
 public class UserTable {
 
-    private Connector connector;
+    private Database connector;
     private PreparedStatement ps;
     // the construct is providing connection to DB
     public UserTable() {
         //user ,pass, url
-        connector = new Connector("", "", "");
+        connector = new Database("", "", "");
         if (connector.connect()) {
             System.out.println("connected!");
         }
 
     }
 
-    public boolean Insert(Users user) {
+    public boolean Insert(User user) {
         
         try {//an example of update DB-------change the update statement to delete of insert
             ps = connector.conn.prepareStatement("UPDATE Messages SET description = ?, author = ? WHERE id = ? AND seq_num = ?");
@@ -47,7 +47,7 @@ public class UserTable {
         return false;
     }
 
-    public boolean Delete(Users user) {
+    public boolean Delete(User user) {
         try {//an example of update DB-------change the update statement to delete of insert
             ps = connector.conn.prepareStatement("UPDATE Messages SET description = ?, author = ? WHERE id = ? AND seq_num = ?");
             // set the preparedstatement parameters--- the following para is just an example NOT real DB
@@ -65,7 +65,7 @@ public class UserTable {
         return false;
     }
 
-    public boolean Update(Users user) {
+    public boolean Update(User user) {
         try {//an example of update DB-------change the update statement to delete of insert
             ps = connector.conn.prepareStatement("UPDATE Messages SET description = ?, author = ? WHERE id = ? AND seq_num = ?");
             // set the preparedstatement parameters--- the following para is just an example NOT real DB
@@ -83,7 +83,7 @@ public class UserTable {
         return false;
     }
 
-    public boolean UpdatePass(Users user) {
+    public boolean UpdatePass(User user) {
         return false;
     }
 
@@ -91,7 +91,7 @@ public class UserTable {
         return null;
     }
 
-    public Users getUser(Users user) {
+    public User getUser(User user) {
         return null;
     }
 

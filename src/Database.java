@@ -14,35 +14,34 @@ import java.util.logging.Logger;
  *
  * @author Hassan
  */
-public class Connector {
+public class Database {
 
     private String URL = "jdbc:mysql://108.167.137.228:3306/imakkico_tms_db";
     private String USER = "imakkico_tms";
     private String PASS = "TMS20tms17";
     public Connection conn;
 
-    public Connector(String user,String Pass,String url) 
+    public Database(String user,String Pass,String url) 
     {
         this.USER=user;
         this.PASS=Pass;
         this.URL=url;
     }
     
-    public Connector() 
+    public Database() 
     {
         
     }
 
     public boolean connect() {
         try {
-            
             Class.forName("com.mysql.jdbc.Driver");
             this.conn = DriverManager.getConnection(URL, USER, PASS);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -52,7 +51,7 @@ public class Connector {
             conn.close();
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -72,12 +71,22 @@ public class Connector {
             
     }
     
-    public ResultSet query(String query){
+    public ResultSet executeQuery(String query){
         try {
             Statement stmt = conn.createStatement();
             return stmt.executeQuery(query);
         } catch (SQLException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public PreparedStatement prepareStatement(String query){
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            return ps;
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

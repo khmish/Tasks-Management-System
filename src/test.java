@@ -10,6 +10,19 @@
  */
 public class test {
     test(){
-        
+                
+    }
+    
+    
+    public static void main(String args[]) {    
+        /*
+                Connector db = new Connector();
+        if (db.hasConnection())
+            System.out.println("SUCESS");
+        else
+            System.out.println("FAIL");
+                */
+        TasksTable tt = new TasksTable();
+        //tt.insert();
     }
 }
