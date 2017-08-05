@@ -12,7 +12,7 @@ import java.util.Date;
  * @author salehalmakki
  */
 public class Task {
-    private int task_id;
+    private long task_id;
     private String created_date;
     private String assignor;
     private String assignee;
@@ -25,7 +25,7 @@ public class Task {
     Task(){
         
     }
-    Task(int task_id, String created_date, String assignor, String assignee, String subject, String details, String due_date, int status, String unit_code){
+    Task(long task_id, String created_date, String assignor, String assignee, String subject, String details, String due_date, int status, String unit_code){
         this.task_id = task_id;
         this.created_date = created_date;
         this.assignor = assignor;
@@ -37,10 +37,10 @@ public class Task {
         this.unit_code = unit_code;
     }
     
-    public void setTaskID(int task_id){
+    public void setTaskID(long task_id){
         this.task_id = task_id;
     }
-    public int getTaskID(){
+    public long getTaskID(){
         return this.task_id;
     }
     
