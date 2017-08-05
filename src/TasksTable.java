@@ -31,7 +31,7 @@ public class TasksTable {
         try {
             database.connect();
             ps = database.prepareStatement("INSERT INTO tasks VALUES(?,?,?,?,?,?,?,?,?)");
-            ps.setInt(1, task.getTaskID());
+            ps.setLong(1, task.getTaskID());
             ps.setString(2, task.getCreatedDate());
             ps.setString(3, task.getAssignor());
             ps.setString(4, task.getAssignee());
@@ -65,7 +65,7 @@ public class TasksTable {
             ps.setString(6, task.getDueDate());
             ps.setInt(7, task.getStatus());
             ps.setString(8, task.getUnitCode());
-            ps.setInt(9, task.getTaskID());
+            ps.setLong(9, task.getTaskID());
 
             ps.executeQuery();
             ps.close();
@@ -75,12 +75,12 @@ public class TasksTable {
         return false;
     }
     
-    public boolean delete(int task_id){
+    public boolean delete(long task_id){
             
         try {
             database.connect();
             ps = database.prepareStatement("DELETE FROM tasks WHERE task_id=?");
-            ps.setInt(1, task_id);
+            ps.setLong(1, task_id);
 
             ps.executeQuery();
             ps.close();
@@ -110,7 +110,7 @@ public class TasksTable {
             while (rs.next()){
                 Task task = new Task();
                 
-                task.setTaskID(rs.getInt(1));
+                task.setTaskID(rs.getLong(1));
                 task.setCreatedDate(rs.getString(2));
                 task.setAssignor(rs.getString(3));
                 task.setAssignee(rs.getString(4));
@@ -143,7 +143,7 @@ public class TasksTable {
             while (rs.next()){
                 Task task = new Task();
                 
-                task.setTaskID(rs.getInt(1));
+                task.setTaskID(rs.getLong(1));
                 task.setCreatedDate(rs.getString(2));
                 task.setAssignor(rs.getString(3));
                 task.setAssignee(rs.getString(4));
@@ -164,13 +164,13 @@ public class TasksTable {
     }
     
     
-    public Task getTask(String task_id){
+    public Task getTask(long task_id){
             
         try {
             database.connect();
             ps = database.prepareStatement("SELECT * FROM tasks WHERE task_id=?");
             
-            ps.setString(1, task_id);
+            ps.setLong(1, task_id);
             rs = ps.executeQuery();
             Task task = new Task();
             
