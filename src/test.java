@@ -24,5 +24,7 @@ public class test {
                 */
         TasksTable tt = new TasksTable();
         //tt.insert();
+        Database db = new Database();
+        System.out.println(db.hasConnection());
     }
 }
