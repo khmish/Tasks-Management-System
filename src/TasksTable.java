@@ -23,6 +23,7 @@ public class TasksTable {
     PreparedStatement ps; ////for SELECT, using excute()
     
     TasksTable(){
+        database.connect();
     }
     
     public boolean insert(Task task){

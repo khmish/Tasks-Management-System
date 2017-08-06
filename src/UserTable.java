@@ -16,13 +16,14 @@ import java.util.logging.Logger;
  */
 public class UserTable {
 
-    private Database connector;
-    private PreparedStatement ps;
+    Database database = new Database();
+    ResultSet rs;   //for SELECT, using excuteQuery()
+    PreparedStatement ps; ////for SELECT, using excute()
     // the construct is providing connection to DB
     public UserTable() {
         //user ,pass, url
-        connector = new Database("", "", "");
-        if (connector.connect()) {
+        
+        if (database.connect()) {
             System.out.println("connected!");
         }
 
@@ -31,15 +32,15 @@ public class UserTable {
     public boolean Insert(User user) {
         
         try {//an example of update DB-------change the update statement to delete of insert
-            ps = connector.conn.prepareStatement("UPDATE Messages SET description = ?, author = ? WHERE id = ? AND seq_num = ?");
-            // set the preparedstatement parameters--- the following para is just an example NOT real DB
-            ps.setString(1, "description");
-            ps.setString(2, "author");
-            ps.setInt(3, 0);
-            ps.setInt(4, 0);
+           database.connect();
+            ps = database.prepareStatement("INSERT INTO users VALUES(?,?,?,?)");
+            ps.setString(1, user.getUserName());
+            ps.setString(2, user.getFirstName());
+            ps.setString(3, user.getLastName());
+            ps.setString(4, user.getUnitCode());
+            
 
-            // call executeUpdate to execute our sql update statement
-            ps.executeUpdate();
+            ps.executeQuery();
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
@@ -49,14 +50,7 @@ public class UserTable {
 
     public boolean Delete(User user) {
         try {//an example of update DB-------change the update statement to delete of insert
-            ps = connector.conn.prepareStatement("UPDATE Messages SET description = ?, author = ? WHERE id = ? AND seq_num = ?");
-            // set the preparedstatement parameters--- the following para is just an example NOT real DB
-            ps.setString(1, "description");
-            ps.setString(2, "author");
-            ps.setInt(3, 0);
-            ps.setInt(4, 0);
-
-            // call executeUpdate to execute our sql update statement
+            
             ps.executeUpdate();
             ps.close();
         } catch (SQLException ex) {
@@ -67,13 +61,7 @@ public class UserTable {
 
     public boolean Update(User user) {
         try {//an example of update DB-------change the update statement to delete of insert
-            ps = connector.conn.prepareStatement("UPDATE Messages SET description = ?, author = ? WHERE id = ? AND seq_num = ?");
-            // set the preparedstatement parameters--- the following para is just an example NOT real DB
-            ps.setString(1, "description");
-            ps.setString(2, "author");
-            ps.setInt(3, 0);
-            ps.setInt(4, 0);
-
+            
             // call executeUpdate to execute our sql update statement
             ps.executeUpdate();
             ps.close();
