@@ -14,13 +14,13 @@ import java.util.logging.Logger;
  *
  * @author khmish
  */
-public class UserTable {
+public class UsersTable {
 
     Database database = new Database();
     ResultSet rs;   //for SELECT, using excuteQuery()
     PreparedStatement ps; ////for SELECT, using excute()
     // the construct is providing connection to DB
-    public UserTable() {
+    public UsersTable() {
         //user ,pass, url
         
         if (database.connect()) {
@@ -43,7 +43,7 @@ public class UserTable {
             ps.executeQuery();
             ps.close();
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -54,7 +54,7 @@ public class UserTable {
             ps.executeUpdate();
             ps.close();
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -66,7 +66,7 @@ public class UserTable {
             ps.executeUpdate();
             ps.close();
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }

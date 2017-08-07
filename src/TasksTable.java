@@ -19,8 +19,8 @@ import java.util.logging.Logger;
  */
 public class TasksTable {
     Database database = new Database();
-    ResultSet rs;   //for SELECT, using excuteQuery()
-    PreparedStatement ps; ////for SELECT, using excute()
+    ResultSet rs;   //for SELECT queries
+    PreparedStatement ps;
     
     TasksTable(){
         database.connect();
@@ -45,7 +45,7 @@ public class TasksTable {
             ps.executeQuery();
             ps.close();
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -55,7 +55,7 @@ public class TasksTable {
             
         try {
             database.connect();
-            ps = database.prepareStatement("UPDATE tasks SET String createdDate=?, assignor=?, assignee=?, subject=?,"
+            ps = database.prepareStatement("UPDATE tasks SET createdDate=?, assignor=?, assignee=?, subject=?,"
                     + "details=?, dueDate=?, status=?, unitCode=? WHERE task_id=?");
 
             ps.setString(1, task.getCreatedDate());
@@ -71,7 +71,7 @@ public class TasksTable {
             ps.executeQuery();
             ps.close();
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -86,7 +86,7 @@ public class TasksTable {
             ps.executeQuery();
             ps.close();
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -126,7 +126,7 @@ public class TasksTable {
             return tasks;
             
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -159,7 +159,7 @@ public class TasksTable {
             return tasks;
             
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -191,7 +191,7 @@ public class TasksTable {
             return task;
             
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -207,7 +207,7 @@ public class TasksTable {
             ps.close();
             
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return id;
     }

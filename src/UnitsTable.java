@@ -39,7 +39,7 @@ public class UnitsTable {
             ps.close();
             
         } catch (SQLException ex) {
-            Logger.getLogger(UserTable.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return unit;
