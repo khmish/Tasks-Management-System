@@ -200,7 +200,7 @@ public class TasksTable {
         long id = -1;   
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT task_id FROM tasks WHERE task_id=MAX(?)");
+            ps = database.prepareStatement("SELECT task_id FROM tasks WHERE task_id=MAX(task_id)");
             rs = ps.executeQuery();
             if (rs.next())
                 id = rs.getLong(1);

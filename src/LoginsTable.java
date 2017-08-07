@@ -35,7 +35,8 @@ public class LoginsTable {
         }
         return false;
     }
-    public boolean logout(String mac_address){
+    public boolean logout(){
+        String mac_address = new Tool().getMAC_Address();
         try {
             database.connect();
             ps = database.prepareStatement("Delete FROM logins WHERE mac_address=?");
@@ -50,11 +51,13 @@ public class LoginsTable {
         return false;
     }
     
-    public boolean isLoggedIn(String mac_address){
+    public boolean isLoggedIn(){
+        String mac_address = new Tool().getMAC_Address();
         boolean isLoggedIn = false;   
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT mac_address FROM logins");
+            ps = database.prepareStatement("SELECT mac_address FROM logins WHERE mac_address=?");
+            ps.setString(1, mac_address);
             rs = ps.executeQuery();
             if (rs.next())
                 isLoggedIn = true;
@@ -65,11 +68,15 @@ public class LoginsTable {
         }
         return isLoggedIn;
     }
+    
+    
     public Login getLog(){
+        String mac_address = new Tool().getMAC_Address();
         Login log = null;   
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM logins");
+            ps = database.prepareStatement("SELECT * FROM logins WHERE mac_address=?");
+            ps.setString(1, mac_address);
             rs = ps.executeQuery();
             if (rs.next())
                 log = new Login(rs.getString(1), rs.getString(2), rs.getString(3));
@@ -79,5 +86,22 @@ public class LoginsTable {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return log;
+    }
+    
+    public int numberOfDevicesRegistered(String username){
+        int count = 0;   
+        try {
+            database.connect();
+            ps = database.prepareStatement("SELECT * FROM logins WHERE user=?");
+            ps.setString(1, username);
+            rs = ps.executeQuery();
+            while (rs.next())
+                count++;
+            ps.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
     }
 }
