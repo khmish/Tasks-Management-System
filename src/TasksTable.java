@@ -131,13 +131,15 @@ public class TasksTable {
         return null;
     }
     
-    public ArrayList getAllTasks(String unit_code){
+    public ArrayList getReceivedTasks(String assignee, boolean allTasks){
             
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM tasks WHERE unit_code=?");
-            
-            ps.setString(1, unit_code);
+            if (allTasks)
+                ps = database.prepareStatement("SELECT * FROM tasks WHERE assignee=?");
+            else
+                ps = database.prepareStatement("SELECT * FROM tasks WHERE assignee=? AND status<0");
+            ps.setString(1, assignee);
             rs = ps.executeQuery();
             ArrayList tasks = new ArrayList();
             

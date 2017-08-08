@@ -16,6 +16,10 @@ public class Form_TaskInfo extends javax.swing.JFrame {
     public Form_TaskInfo() {
         initComponents();
     }
+    
+    public Form_TaskInfo(Task task) {
+        initComponents();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -193,7 +197,7 @@ public class Form_TaskInfo extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Form_TaskInfo().setVisible(true);
+                //new Form_TaskInfo().setVisible(true);
             }
         });
     }

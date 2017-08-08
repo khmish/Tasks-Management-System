@@ -8,8 +8,8 @@
  *
  * @author salehalmakki
  */
-public class test {
-    test(){
+public class Main {
+    Main(){
                 
     }
     

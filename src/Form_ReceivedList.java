@@ -1,5 +1,8 @@
 
-import javax.swing.JOptionPane;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import javax.swing.JDialog;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,13 +16,24 @@ import javax.swing.JOptionPane;
  */
 public class Form_ReceivedList extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Form_ReceivedList
-     */
-    public Form_ReceivedList() {
+    User user;
+    TasksTable tasksTable = new TasksTable();
+    public Form_ReceivedList(User user) {
         initComponents();
+        this.user = user;
+        
+        updateTable(false);
     }
 
+    private void updateTable(boolean showAll){
+        ArrayList array = tasksTable.getReceivedTasks(user.getUserName(), showAll);
+        for(int i = 0; i < array.size(); i++){
+            Task task = (Task) array.get(0);
+            Object[] row = { task.getTaskID(), task.getSubject(), task.getDueDate(), task.getStatus() };
+            DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
+            model.addRow(row);
+        }
+    } 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,16 +48,17 @@ public class Form_ReceivedList extends javax.swing.JFrame {
         chkShowCompleted = new javax.swing.JCheckBox();
         jScrollPane2 = new javax.swing.JScrollPane();
         chbMenu = new javax.swing.JList();
-        Title = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblTasksToClose = new javax.swing.JTable();
+        Title1 = new javax.swing.JLabel();
+        lblNewTask = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tblTasks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Task ID", "Subject", "Due Date", "Status"
@@ -52,25 +67,102 @@ public class Form_ReceivedList extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
         tblTasks.setName("tasksBox"); // NOI18N
+        tblTasks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblTasksMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblTasks);
+        if (tblTasks.getColumnModel().getColumnCount() > 0) {
+            tblTasks.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tblTasks.getColumnModel().getColumn(1).setPreferredWidth(500);
+            tblTasks.getColumnModel().getColumn(2).setPreferredWidth(200);
+            tblTasks.getColumnModel().getColumn(3).setPreferredWidth(200);
+        }
 
         chkShowCompleted.setText("Show completed tasks");
+        chkShowCompleted.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkShowCompletedActionPerformed(evt);
+            }
+        });
 
         chbMenu.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "My Tasks", "Sent Tasks", "Settings" };
+            String[] strings = { "My Tasks", "Sent Tasks" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        chbMenu.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                chbMenuValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(chbMenu);
 
-        Title.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
-        Title.setText("My Tasks");
+        lblTitle.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
+        lblTitle.setText("My Tasks");
+
+        tblTasksToClose.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Task ID", "Subject", "Due Date", "Status"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblTasksToClose.setName("tasksBox"); // NOI18N
+        tblTasksToClose.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblTasksToCloseMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tblTasksToClose);
+        if (tblTasksToClose.getColumnModel().getColumnCount() > 0) {
+            tblTasksToClose.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tblTasksToClose.getColumnModel().getColumn(1).setPreferredWidth(500);
+            tblTasksToClose.getColumnModel().getColumn(2).setPreferredWidth(200);
+            tblTasksToClose.getColumnModel().getColumn(3).setPreferredWidth(200);
+        }
+
+        Title1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        Title1.setText("Requests to close");
+
+        lblNewTask.setForeground(new java.awt.Color(0, 0, 255));
+        lblNewTask.setText("New Task");
+        lblNewTask.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblNewTask.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblNewTaskMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -80,9 +172,15 @@ public class Form_ReceivedList extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chkShowCompleted)
-                    .addComponent(Title))
+                    .addComponent(lblTitle)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Title1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(chkShowCompleted)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblNewTask))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(110, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -90,16 +188,62 @@ public class Form_ReceivedList extends javax.swing.JFrame {
             .addComponent(jScrollPane2)
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(Title, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkShowCompleted)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkShowCompleted)
+                    .addComponent(lblNewTask))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(174, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(Title1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void chkShowCompletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkShowCompletedActionPerformed
+        if (chkShowCompleted.isSelected())
+            updateTable(true);
+        else
+            updateTable(false);
+    }//GEN-LAST:event_chkShowCompletedActionPerformed
+
+    private void tblTasksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTasksMouseClicked
+        if (evt.getClickCount() == 2){
+            Task task = new Task();
+            task = tasksTable.getTask(WIDTH);
+            new Form_TaskInfo(task).setVisible(true);
+        }
+    }//GEN-LAST:event_tblTasksMouseClicked
+
+    private void tblTasksToCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTasksToCloseMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblTasksToCloseMouseClicked
+
+    private void lblNewTaskMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNewTaskMouseClicked
+        Form_TaskInfo form = new Form_TaskInfo();
+        new JDialog(form).setVisible(true);
+        
+        //new Form_TaskInfo().setVisible(true);
+    }//GEN-LAST:event_lblNewTaskMouseClicked
+
+    private void chbMenuValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_chbMenuValueChanged
+        if(chbMenu.getSelectedIndex()==0){
+            lblTitle.setText("My Tasks");
+            lblNewTask.hide();
+            tblTasksToClose.hide();
+        }
+        else if(chbMenu.getSelectedIndex()==1){
+            lblTitle.setText("Sent Tasks");
+            lblNewTask.show();
+            tblTasksToClose.show();
+        }
+            
+    }//GEN-LAST:event_chbMenuValueChanged
 
     /**
      * @param args the command line arguments
@@ -131,17 +275,23 @@ public class Form_ReceivedList extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Form_ReceivedList().setVisible(true);
+                User u = new User("assignedTo", "Saleh Almakki", "", "AA");
+                
+                new Form_ReceivedList(u).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Title;
+    private javax.swing.JLabel Title1;
     private javax.swing.JList chbMenu;
     private javax.swing.JCheckBox chkShowCompleted;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lblNewTask;
+    private javax.swing.JLabel lblTitle;
     private javax.swing.JTable tblTasks;
+    private javax.swing.JTable tblTasksToClose;
     // End of variables declaration//GEN-END:variables
 }
