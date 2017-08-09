@@ -22,6 +22,7 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
     public Dialog_TaskInfo(Task task){
         super(new java.awt.Frame(), true);
         initComponents();
+        new Tool().CenterForm(this);
         this.task = task;
     }
     public Dialog_TaskInfo(java.awt.Frame parent, boolean modal) {

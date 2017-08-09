@@ -11,18 +11,32 @@
 public class User {
 
     private String userName;
-    private String firstName;
-    private String lastName;
+    private String name;
+    private String password;
+    private int isAdmin;
     private String unitId;
 
-    public User(String userName, String firstName, String lastName, String unitId) {
+    public User(String userName, String pass, String name, int isAdmin, String unitId) {
 
         this.userName = userName;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.password = pass;
+        this.name = name;
+        this.isAdmin = isAdmin;
         this.unitId = unitId;
     }
 
+    
+    public void setAdmin(boolean isAdmin){
+        if(isAdmin)
+            this.isAdmin = 1;
+        else
+            this.isAdmin = 0;
+    }
+    public boolean isAdmin(){
+        if (this.isAdmin == 1) return true; 
+        else return false;
+    }
+    
     /**
      * Get the value of unitId
      *
@@ -46,8 +60,8 @@ public class User {
      *
      * @return the value of lastName
      */
-    public String getLastName() {
-        return lastName;
+    public String getName() {
+        return name;
     }
 
     /**
@@ -55,8 +69,8 @@ public class User {
      *
      * @param lastName new value of lastName
      */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUserName() {
@@ -72,17 +86,17 @@ public class User {
         this.userName = userName;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getPassword() {
+        return password;
     }
 
     /**
      * Set the value of firstName
      *
-     * @param firstName new value of firstName
+     * @param password new value of firstName
      */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
 }

@@ -35,8 +35,8 @@ public class UsersTable {
            database.connect();
             ps = database.prepareStatement("INSERT INTO users VALUES(?,?,?,?)");
             ps.setString(1, user.getUserName());
-            ps.setString(2, user.getFirstName());
-            ps.setString(3, user.getLastName());
+            ps.setString(2, user.getName());
+            ps.setString(3, user.getPassword());
             ps.setString(4, user.getUnitCode());
             
 
@@ -71,7 +71,7 @@ public class UsersTable {
         return false;
     }
 
-    public boolean UpdatePass(User user) {
+    public boolean UpdatePass(String username, String newPassword) {
         return false;
     }
 

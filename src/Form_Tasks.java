@@ -14,13 +14,17 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Form_Tasks extends javax.swing.JFrame {
 
-    User user;
-    ArrayList receivedTasks;
-    ArrayList sentTasks;
-    TasksTable tasksTable = new TasksTable();
+    private User user;
+    private ArrayList receivedTasks;
+    private ArrayList sentTasks;
+    private TasksTable tasksTable = new TasksTable();
+    private Form_Settings settings_form;
+    
     public Form_Tasks(User user) {
         initComponents();
+        new Tool().CenterForm(this);
         this.user = user;
+        settings_form = new Form_Settings(user, this);
         receivedTasks = tasksTable.getReceivedTasks(user.getUserName());
         sentTasks = tasksTable.getSentTasks(user.getUserName());
         lstMenu.setSelectedIndex(0);
@@ -28,7 +32,17 @@ public class Form_Tasks extends javax.swing.JFrame {
         //btnReturn.setEnabled(false);
     }
 
-    private void updateTable(ArrayList array, boolean showAll){
+    private void updateTable(){
+        
+        DefaultTableModel dm = (DefaultTableModel)tblTasks.getModel();
+        dm.getDataVector().removeAllElements();
+        dm.fireTableDataChanged();
+
+        ArrayList array;
+        if (lstMenu.getSelectedIndex() == 0) array = receivedTasks;
+        else array = sentTasks;
+        
+        boolean showAll = chkShowCompleted.isSelected();
         
         
         for(int i = 0; i < array.size(); i++){
@@ -45,6 +59,10 @@ public class Form_Tasks extends javax.swing.JFrame {
             }
         }
     } 
+    
+    public void setMenuSelection(int value){
+        lstMenu.setSelectedIndex(value);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -182,7 +200,7 @@ public class Form_Tasks extends javax.swing.JFrame {
         pnlTasksToClose.setLayout(pnlTasksToCloseLayout);
         pnlTasksToCloseLayout.setHorizontalGroup(
             pnlTasksToCloseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
         );
         pnlTasksToCloseLayout.setVerticalGroup(
             pnlTasksToCloseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,21 +233,20 @@ public class Form_Tasks extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblTitle)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(chkShowCompleted)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblNewTask))
-                        .addComponent(jScrollPane1)
-                        .addComponent(lblTasksToClose)
-                        .addComponent(pnlTasksToClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(chkShowCompleted)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblNewTask))
+                    .addComponent(lblTasksToClose)
+                    .addComponent(pnlTasksToClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnClose)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(56, Short.MAX_VALUE))
+                        .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -258,26 +275,14 @@ public class Form_Tasks extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void chkShowCompletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkShowCompletedActionPerformed
-        DefaultTableModel dm = (DefaultTableModel)tblTasks.getModel();
-        dm.getDataVector().removeAllElements();
-        tblTasks.repaint();
-        
-        if (lstMenu.getSelectedIndex() == 0 && chkShowCompleted.isSelected())
-            updateTable(receivedTasks, true);
-        else if (lstMenu.getSelectedIndex() == 0 && !chkShowCompleted.isSelected())
-            updateTable(receivedTasks, false);
-        else if (lstMenu.getSelectedIndex() == 1 && chkShowCompleted.isSelected())
-            updateTable(sentTasks, true);
-        else if (lstMenu.getSelectedIndex() == 1 && !chkShowCompleted.isSelected())
-            updateTable(sentTasks, false);
+        updateTable();
     }//GEN-LAST:event_chkShowCompletedActionPerformed
 
     private void tblTasksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTasksMouseClicked
         if (evt.getClickCount() == 2){
-            Task task = new Task();
             int row = tblTasks.getSelectedRow();
             long task_id = (long) tblTasks.getValueAt(row, 0);
-            task = tasksTable.getTask(task_id);
+            Task task = tasksTable.getTask(task_id);
             new Dialog_TaskInfo(task).setVisible(true);
         }
         if(tblTasksToClose.getSelectedRowCount() == 1){
@@ -290,12 +295,12 @@ public class Form_Tasks extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tblTasksMouseClicked
 
+    
     private void tblTasksToCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTasksToCloseMouseClicked
          if (evt.getClickCount() == 2){
-            Task task = new Task();
             int row = tblTasksToClose.getSelectedRow();
             long task_id = (long) tblTasksToClose.getValueAt(row, 0);
-            task = tasksTable.getTask(task_id);
+            Task task = tasksTable.getTask(task_id);
             new Dialog_TaskInfo(task).setVisible(true);
          }
     }//GEN-LAST:event_tblTasksToCloseMouseClicked
@@ -305,18 +310,16 @@ public class Form_Tasks extends javax.swing.JFrame {
     }//GEN-LAST:event_lblNewTaskMouseClicked
 
     
-    
-    Form_Settings settings_form = new Form_Settings(user, this);
     private void lstMenuValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstMenuValueChanged
-        //System.out.println(tblTasks.getSize());
+        
         if(lstMenu.getSelectedIndex()==0){
-            tblTasks.setSize(tblTasks.getWidth(), tblTasks.getHeight()+200);
             lblTitle.setText("My Tasks");
             lblNewTask.hide();
             pnlTasksToClose.hide();
             lblTasksToClose.hide();
             btnClose.hide();
             btnReturn.hide();
+            updateTable();
         }
         else if(lstMenu.getSelectedIndex()==1){
             lblTitle.setText("Sent Tasks");
@@ -325,11 +328,12 @@ public class Form_Tasks extends javax.swing.JFrame {
             lblTasksToClose.show();
             btnClose.show();
             btnReturn.show();
+            updateTable();
         }
           
         else if(lstMenu.getSelectedIndex()==2){
             settings_form.setVisible(true);
-            //settings_form.toFront();
+            settings_form.setMenuSelection(2);
             this.setVisible(false);
         }
     }//GEN-LAST:event_lstMenuValueChanged
@@ -388,7 +392,7 @@ public class Form_Tasks extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                User u = new User("assignedTo", "Saleh Almakki", "", "AA");
+                User u = new User("assignedTo", "", "Saleh Almakki", 1, "AA");
                 
                 new Form_Tasks(u).setVisible(true);
             }

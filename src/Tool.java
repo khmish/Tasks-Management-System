@@ -1,8 +1,12 @@
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -43,5 +47,14 @@ public class Tool {
         
         return MAC_address;
     } 
+    
+    public void CenterForm(JFrame form){
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        form.setLocation(dim.width/2-form.getSize().width/2, dim.height/2-form.getSize().height/2);
+    }
+    public void CenterForm(JDialog form){
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        form.setLocation(dim.width/2-form.getSize().width/2, dim.height/2-form.getSize().height/2);
+    }
     
 }

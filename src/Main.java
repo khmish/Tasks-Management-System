@@ -28,7 +28,7 @@ public class Main {
         //System.out.println(db.hasConnection());
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                User u = new User("assignedTo", "Saleh Almakki", "", "AA");
+                User u = new User("assignedTo", "", "Saleh Almakki", 1, "AA");
                 
                 new Form_Tasks(u).setVisible(true);
             }
