@@ -22,9 +22,16 @@ public class Main {
         else
             System.out.println("FAIL");
                 */
-        TasksTable tt = new TasksTable();
+        //TasksTable tt = new TasksTable();
         //tt.insert();
-        Database db = new Database();
-        System.out.println(db.hasConnection());
+        //Database db = new Database();
+        //System.out.println(db.hasConnection());
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                User u = new User("assignedTo", "Saleh Almakki", "", "AA");
+                
+                new Form_Tasks(u).setVisible(true);
+            }
+        });
     }
 }

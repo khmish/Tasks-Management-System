@@ -1,7 +1,5 @@
 
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import javax.swing.JDialog;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -14,24 +12,37 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author salehalmakki
  */
-public class Form_ReceivedList extends javax.swing.JFrame {
+public class Form_Tasks extends javax.swing.JFrame {
 
     User user;
+    ArrayList receivedTasks;
+    ArrayList sentTasks;
     TasksTable tasksTable = new TasksTable();
-    public Form_ReceivedList(User user) {
+    public Form_Tasks(User user) {
         initComponents();
         this.user = user;
-        
-        updateTable(false);
+        receivedTasks = tasksTable.getReceivedTasks(user.getUserName());
+        sentTasks = tasksTable.getSentTasks(user.getUserName());
+        lstMenu.setSelectedIndex(0);
+        //btnClose.setEnabled(false);
+        //btnReturn.setEnabled(false);
     }
 
-    private void updateTable(boolean showAll){
-        ArrayList array = tasksTable.getReceivedTasks(user.getUserName(), showAll);
+    private void updateTable(ArrayList array, boolean showAll){
+        
+        
         for(int i = 0; i < array.size(); i++){
             Task task = (Task) array.get(0);
-            Object[] row = { task.getTaskID(), task.getSubject(), task.getDueDate(), task.getStatus() };
-            DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
-            model.addRow(row);
+            if(showAll){
+                Object[] row = { task.getTaskID(), task.getSubject(), task.getDueDate(), task.getStatus() };
+                DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
+                model.addRow(row);
+            }
+            else if(task.getStatus() == 0){
+                Object[] row = { task.getTaskID(), task.getSubject(), task.getDueDate(), task.getStatus() };
+                DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
+                model.addRow(row);
+            }
         }
     } 
     /**
@@ -47,12 +58,15 @@ public class Form_ReceivedList extends javax.swing.JFrame {
         tblTasks = new javax.swing.JTable();
         chkShowCompleted = new javax.swing.JCheckBox();
         jScrollPane2 = new javax.swing.JScrollPane();
-        chbMenu = new javax.swing.JList();
+        lstMenu = new javax.swing.JList();
         lblTitle = new javax.swing.JLabel();
+        lblTasksToClose = new javax.swing.JLabel();
+        lblNewTask = new javax.swing.JLabel();
+        pnlTasksToClose = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblTasksToClose = new javax.swing.JTable();
-        Title1 = new javax.swing.JLabel();
-        lblNewTask = new javax.swing.JLabel();
+        btnClose = new javax.swing.JButton();
+        btnReturn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -100,20 +114,32 @@ public class Form_ReceivedList extends javax.swing.JFrame {
             }
         });
 
-        chbMenu.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "My Tasks", "Sent Tasks" };
+        lstMenu.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "My Tasks", "Sent Tasks", "Settings" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        chbMenu.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        lstMenu.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                chbMenuValueChanged(evt);
+                lstMenuValueChanged(evt);
             }
         });
-        jScrollPane2.setViewportView(chbMenu);
+        jScrollPane2.setViewportView(lstMenu);
 
         lblTitle.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
         lblTitle.setText("My Tasks");
+
+        lblTasksToClose.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        lblTasksToClose.setText("Requests to close");
+
+        lblNewTask.setForeground(new java.awt.Color(0, 0, 255));
+        lblNewTask.setText("New Task");
+        lblNewTask.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblNewTask.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblNewTaskMouseClicked(evt);
+            }
+        });
 
         tblTasksToClose.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -152,15 +178,33 @@ public class Form_ReceivedList extends javax.swing.JFrame {
             tblTasksToClose.getColumnModel().getColumn(3).setPreferredWidth(200);
         }
 
-        Title1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        Title1.setText("Requests to close");
+        javax.swing.GroupLayout pnlTasksToCloseLayout = new javax.swing.GroupLayout(pnlTasksToClose);
+        pnlTasksToClose.setLayout(pnlTasksToCloseLayout);
+        pnlTasksToCloseLayout.setHorizontalGroup(
+            pnlTasksToCloseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        pnlTasksToCloseLayout.setVerticalGroup(
+            pnlTasksToCloseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTasksToCloseLayout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
-        lblNewTask.setForeground(new java.awt.Color(0, 0, 255));
-        lblNewTask.setText("New Task");
-        lblNewTask.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblNewTask.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblNewTaskMouseClicked(evt);
+        btnClose.setText("Close");
+        btnClose.setEnabled(false);
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseActionPerformed(evt);
+            }
+        });
+
+        btnReturn.setForeground(new java.awt.Color(255, 0, 0));
+        btnReturn.setText("Return");
+        btnReturn.setEnabled(false);
+        btnReturn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReturnActionPerformed(evt);
             }
         });
 
@@ -173,15 +217,19 @@ public class Form_ReceivedList extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTitle)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Title1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addComponent(chkShowCompleted)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblNewTask))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(110, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1)
+                        .addComponent(lblTasksToClose)
+                        .addComponent(pnlTasksToClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnClose)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,54 +244,118 @@ public class Form_ReceivedList extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(Title1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
+                .addComponent(lblTasksToClose, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlTasksToClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnClose)
+                    .addComponent(btnReturn))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void chkShowCompletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkShowCompletedActionPerformed
-        if (chkShowCompleted.isSelected())
-            updateTable(true);
-        else
-            updateTable(false);
+        DefaultTableModel dm = (DefaultTableModel)tblTasks.getModel();
+        dm.getDataVector().removeAllElements();
+        tblTasks.repaint();
+        
+        if (lstMenu.getSelectedIndex() == 0 && chkShowCompleted.isSelected())
+            updateTable(receivedTasks, true);
+        else if (lstMenu.getSelectedIndex() == 0 && !chkShowCompleted.isSelected())
+            updateTable(receivedTasks, false);
+        else if (lstMenu.getSelectedIndex() == 1 && chkShowCompleted.isSelected())
+            updateTable(sentTasks, true);
+        else if (lstMenu.getSelectedIndex() == 1 && !chkShowCompleted.isSelected())
+            updateTable(sentTasks, false);
     }//GEN-LAST:event_chkShowCompletedActionPerformed
 
     private void tblTasksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTasksMouseClicked
         if (evt.getClickCount() == 2){
             Task task = new Task();
-            task = tasksTable.getTask(WIDTH);
-            new Form_TaskInfo(task).setVisible(true);
+            int row = tblTasks.getSelectedRow();
+            long task_id = (long) tblTasks.getValueAt(row, 0);
+            task = tasksTable.getTask(task_id);
+            new Dialog_TaskInfo(task).setVisible(true);
+        }
+        if(tblTasksToClose.getSelectedRowCount() == 1){
+            btnClose.setEnabled(true);
+            btnReturn.setEnabled(true);
+        }
+        else{
+            btnClose.setEnabled(false);
+            btnReturn.setEnabled(false);
         }
     }//GEN-LAST:event_tblTasksMouseClicked
 
     private void tblTasksToCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTasksToCloseMouseClicked
-        // TODO add your handling code here:
+         if (evt.getClickCount() == 2){
+            Task task = new Task();
+            int row = tblTasksToClose.getSelectedRow();
+            long task_id = (long) tblTasksToClose.getValueAt(row, 0);
+            task = tasksTable.getTask(task_id);
+            new Dialog_TaskInfo(task).setVisible(true);
+         }
     }//GEN-LAST:event_tblTasksToCloseMouseClicked
 
     private void lblNewTaskMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNewTaskMouseClicked
-        Form_TaskInfo form = new Form_TaskInfo();
-        new JDialog(form).setVisible(true);
-        
-        //new Form_TaskInfo().setVisible(true);
+        new Dialog_TaskInfo().setVisible(true);
     }//GEN-LAST:event_lblNewTaskMouseClicked
 
-    private void chbMenuValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_chbMenuValueChanged
-        if(chbMenu.getSelectedIndex()==0){
+    
+    
+    Form_Settings settings_form = new Form_Settings(user, this);
+    private void lstMenuValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstMenuValueChanged
+        //System.out.println(tblTasks.getSize());
+        if(lstMenu.getSelectedIndex()==0){
+            tblTasks.setSize(tblTasks.getWidth(), tblTasks.getHeight()+200);
             lblTitle.setText("My Tasks");
             lblNewTask.hide();
-            tblTasksToClose.hide();
+            pnlTasksToClose.hide();
+            lblTasksToClose.hide();
+            btnClose.hide();
+            btnReturn.hide();
         }
-        else if(chbMenu.getSelectedIndex()==1){
+        else if(lstMenu.getSelectedIndex()==1){
             lblTitle.setText("Sent Tasks");
             lblNewTask.show();
-            tblTasksToClose.show();
+            pnlTasksToClose.show();
+            lblTasksToClose.show();
+            btnClose.show();
+            btnReturn.show();
         }
-            
-    }//GEN-LAST:event_chbMenuValueChanged
+          
+        else if(lstMenu.getSelectedIndex()==2){
+            settings_form.setVisible(true);
+            //settings_form.toFront();
+            this.setVisible(false);
+        }
+    }//GEN-LAST:event_lstMenuValueChanged
+
+    private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
+        if (tblTasksToClose.getSelectedRowCount() == 0)
+            return;
+        
+        int row = tblTasksToClose.getSelectedRow();
+        long task_id = (long) tblTasksToClose.getValueAt(row, 0);
+        tasksTable.updateStatus(task_id, 0);
+
+    }//GEN-LAST:event_btnReturnActionPerformed
+
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        if (tblTasksToClose.getSelectedRowCount() == 0)
+            return;
+        
+        int row = tblTasksToClose.getSelectedRow();
+        long task_id = (long) tblTasksToClose.getValueAt(row, 0);
+        int status = (int) tblTasksToClose.getValueAt(row, 3);
+        if (status == -1)
+            tasksTable.updateStatus(task_id, 1);
+        else if(status == -2)
+            tasksTable.updateStatus(task_id, 2);
+    }//GEN-LAST:event_btnCloseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -262,14 +374,15 @@ public class Form_ReceivedList extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Form_ReceivedList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_Tasks.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Form_ReceivedList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_Tasks.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Form_ReceivedList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_Tasks.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Form_ReceivedList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_Tasks.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
@@ -277,20 +390,23 @@ public class Form_ReceivedList extends javax.swing.JFrame {
             public void run() {
                 User u = new User("assignedTo", "Saleh Almakki", "", "AA");
                 
-                new Form_ReceivedList(u).setVisible(true);
+                new Form_Tasks(u).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Title1;
-    private javax.swing.JList chbMenu;
+    private javax.swing.JButton btnClose;
+    private javax.swing.JButton btnReturn;
     private javax.swing.JCheckBox chkShowCompleted;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblNewTask;
+    private javax.swing.JLabel lblTasksToClose;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JList lstMenu;
+    private javax.swing.JPanel pnlTasksToClose;
     private javax.swing.JTable tblTasks;
     private javax.swing.JTable tblTasksToClose;
     // End of variables declaration//GEN-END:variables

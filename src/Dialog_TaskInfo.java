@@ -1,3 +1,6 @@
+
+import javax.swing.JFrame;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,16 +11,21 @@
  *
  * @author salehalmakki
  */
-public class Form_TaskInfo extends javax.swing.JFrame {
-
-    /**
-     * Creates new form Form_TaskInfo
-     */
-    public Form_TaskInfo() {
+public class Dialog_TaskInfo extends javax.swing.JDialog {
+    Task task = new Task();
+    
+    public Dialog_TaskInfo(){
+        super(new java.awt.Frame(), true);
         initComponents();
     }
     
-    public Form_TaskInfo(Task task) {
+    public Dialog_TaskInfo(Task task){
+        super(new java.awt.Frame(), true);
+        initComponents();
+        this.task = task;
+    }
+    public Dialog_TaskInfo(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
     }
 
@@ -30,34 +38,29 @@ public class Form_TaskInfo extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTaskID = new javax.swing.JLabel();
         Title = new javax.swing.JLabel();
+        btnSend = new javax.swing.JButton();
         txtSubject = new javax.swing.JTextField();
+        txtDueDate = new javax.swing.JFormattedTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDetails = new javax.swing.JTextArea();
-        txtDueDate = new javax.swing.JFormattedTextField();
-        btnSend = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         radInProgress = new javax.swing.JRadioButton();
         radCompleted = new javax.swing.JRadioButton();
         radClosed = new javax.swing.JRadioButton();
-        jLabel4 = new javax.swing.JLabel();
-        lblTaskID = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        lblTaskID.setText("Task ID");
+        lblTaskID.setName("lblTaskID"); // NOI18N
 
         Title.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
         Title.setText("Task Info");
         Title.setAlignmentY(0.0F);
-
-        txtSubject.setName(""); // NOI18N
-
-        txtDetails.setColumns(20);
-        txtDetails.setRows(5);
-        jScrollPane1.setViewportView(txtDetails);
-
-        txtDueDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
 
         btnSend.setText("Send");
         btnSend.addActionListener(new java.awt.event.ActionListener() {
@@ -66,11 +69,21 @@ public class Form_TaskInfo extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Subject");
+        txtSubject.setName(""); // NOI18N
+
+        txtDueDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
+
+        txtDetails.setColumns(20);
+        txtDetails.setRows(5);
+        jScrollPane1.setViewportView(txtDetails);
 
         jLabel2.setText("Information");
 
         jLabel3.setText("Due Date");
+
+        jLabel1.setText("Subject");
+
+        jLabel4.setText("Status");
 
         radInProgress.setText("In progress");
 
@@ -79,11 +92,6 @@ public class Form_TaskInfo extends javax.swing.JFrame {
 
         radClosed.setForeground(new java.awt.Color(194, 0, 0));
         radClosed.setText("Closed");
-
-        jLabel4.setText("Status");
-
-        lblTaskID.setText("Task ID");
-        lblTaskID.setName("lblTaskID"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,7 +130,7 @@ public class Form_TaskInfo extends javax.swing.JFrame {
                         .addComponent(radCompleted)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(radClosed)))
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,7 +158,7 @@ public class Form_TaskInfo extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(radInProgress)
@@ -184,20 +192,27 @@ public class Form_TaskInfo extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Form_TaskInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Dialog_TaskInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Form_TaskInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Dialog_TaskInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Form_TaskInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Dialog_TaskInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Form_TaskInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Dialog_TaskInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new Form_TaskInfo().setVisible(true);
+                Dialog_TaskInfo dialog = new Dialog_TaskInfo(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }

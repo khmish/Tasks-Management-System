@@ -76,6 +76,23 @@ public class TasksTable {
         return false;
     }
     
+    public boolean updateStatus(long task_id, int status){
+            
+        try {
+            database.connect();
+            ps = database.prepareStatement("UPDATE tasks SET status=? WHERE task_id=?");
+
+            ps.setInt(1, status);
+            ps.setLong(2, task_id);
+
+            ps.executeQuery();
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
     public boolean delete(long task_id){
             
         try {
@@ -131,14 +148,11 @@ public class TasksTable {
         return null;
     }
     
-    public ArrayList getReceivedTasks(String assignee, boolean allTasks){
+    public ArrayList getReceivedTasks(String assignee){
             
         try {
             database.connect();
-            if (allTasks)
-                ps = database.prepareStatement("SELECT * FROM tasks WHERE assignee=?");
-            else
-                ps = database.prepareStatement("SELECT * FROM tasks WHERE assignee=? AND status<0");
+            ps = database.prepareStatement("SELECT * FROM tasks WHERE assignee=?");
             ps.setString(1, assignee);
             rs = ps.executeQuery();
             ArrayList tasks = new ArrayList();
@@ -166,6 +180,37 @@ public class TasksTable {
         return null;
     }
     
+    public ArrayList getSentTasks(String assignor){
+            
+        try {
+            database.connect();
+            ps = database.prepareStatement("SELECT * FROM tasks WHERE assignor=? ORDER BY status DESC");
+            ps.setString(1, assignor);
+            rs = ps.executeQuery();
+            ArrayList tasks = new ArrayList();
+            
+            while (rs.next()){
+                Task task = new Task();
+                
+                task.setTaskID(rs.getLong(1));
+                task.setCreatedDate(rs.getString(2));
+                task.setAssignor(rs.getString(3));
+                task.setAssignee(rs.getString(4));
+                task.setSubject(rs.getString(5));
+                task.setDetails(rs.getString(6));
+                task.setDueDate(rs.getString(7));
+                task.setStatus(rs.getInt(8));
+                task.setUnitCode(rs.getString(9));
+                tasks.add(task);
+            }
+            ps.close();
+            return tasks;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     
     public Task getTask(long task_id){
             
