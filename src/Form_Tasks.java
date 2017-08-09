@@ -18,13 +18,13 @@ public class Form_Tasks extends javax.swing.JFrame {
     private ArrayList receivedTasks;
     private ArrayList sentTasks;
     private TasksTable tasksTable = new TasksTable();
-    private Form_Settings settings_form;
+    private Form_UserSettings settings_form;
     
     public Form_Tasks(User user) {
         initComponents();
         new Tool().CenterForm(this);
         this.user = user;
-        settings_form = new Form_Settings(user, this);
+        settings_form = new Form_UserSettings(user, this);
         receivedTasks = tasksTable.getReceivedTasks(user.getUserName());
         sentTasks = tasksTable.getSentTasks(user.getUserName());
         lstMenu.setSelectedIndex(0);

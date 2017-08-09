@@ -16,14 +16,14 @@ import javax.swing.SwingConstants;
  *
  * @author salehalmakki
  */
-public class Form_Settings extends javax.swing.JFrame {
+public class Form_UserSettings extends javax.swing.JFrame {
 
     /**
      * Creates new form FormSettings
      */
     User user;
     Form_Tasks tasksForm;
-    public Form_Settings(User user, Form_Tasks tasksForm) {
+    public Form_UserSettings(User user, Form_Tasks tasksForm) {
         initComponents();
         new Tool().CenterForm(this);
         this.user = user;
@@ -281,21 +281,23 @@ public class Form_Settings extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Form_Settings.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_UserSettings.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Form_Settings.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_UserSettings.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Form_Settings.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_UserSettings.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Form_Settings.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_UserSettings.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new Form_Settings().setVisible(true);
+                //new Form_UserSettings().setVisible(true);
             }
         });
     }

@@ -57,4 +57,13 @@ public class Tool {
         form.setLocation(dim.width/2-form.getSize().width/2, dim.height/2-form.getSize().height/2);
     }
     
+    
+    public String reverseDate(String dateToReverse){
+        char[] date = dateToReverse.toCharArray();
+        String day = date[8] + date[9] + "";
+        String month = date[5] + date[6] + "";
+        String year = date[0] + date[1] + date[2] + date[3] + "";
+        
+        return day + "-" + month + "-" + year;
+    }
 }
