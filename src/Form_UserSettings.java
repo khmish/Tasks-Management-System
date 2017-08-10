@@ -21,20 +21,24 @@ public class Form_UserSettings extends javax.swing.JFrame {
     /**
      * Creates new form FormSettings
      */
+    int access_type; // if 1, access as an administrator. 0, access as normal user
     User user;
     Form_Tasks tasksForm;
-    public Form_UserSettings(User user, Form_Tasks tasksForm) {
+    
+    public Form_UserSettings(User user, int access_type, Form_Tasks tasksForm) {
         initComponents();
         new Tool().CenterForm(this);
         this.user = user;
+        this.access_type = access_type;
         this.tasksForm = tasksForm;
         
         txtName.setText(user.getName());
         txtUser.setText(user.getUserName());
             
-        if (user.isAdmin()){
+        if (this.access_type == 1){
             txtName.setEditable(true);
             txtUser.setEditable(false);
+            chbSetAdmin.setVisible(true);
             txtOldPass.setEditable(false);
             txtPass1.setEditable(true);
             txtPass2.setEditable(true);
@@ -42,12 +46,24 @@ public class Form_UserSettings extends javax.swing.JFrame {
         else{
             txtName.setEditable(false);
             txtUser.setEditable(false);
+            chbSetAdmin.setVisible(false);
             txtOldPass.setEditable(true);
             txtPass1.setEditable(true);
             txtPass2.setEditable(true);
         }
         lblErrorMessage.setVisible(false);
         lblErrorMessage.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        LoginsTable logsTable = new LoginsTable();
+        int logs = logsTable.getNumberOfDevicesRegistered(user.getUserName()) - 1;
+        if (logs == 1){
+            lblLogsInfo.setText("There are no other devices connected to your account");
+            lblLogoutUser.setEnabled(false);
+        }
+        else if(logs == 2)
+            lblLogsInfo.setText("There is another device connected to your account");
+        else
+            lblLogsInfo.setText("There are " + logs + " other devices connected to your account");
     }
 
     /**
@@ -75,6 +91,9 @@ public class Form_UserSettings extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         lblErrorMessage = new javax.swing.JLabel();
         chbSetAdmin = new javax.swing.JCheckBox();
+        lblLogsInfo = new javax.swing.JLabel();
+        lblLogoutDevice = new javax.swing.JLabel();
+        lblLogoutUser = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -120,6 +139,26 @@ public class Form_UserSettings extends javax.swing.JFrame {
         chbSetAdmin.setForeground(new java.awt.Color(0, 0, 255));
         chbSetAdmin.setText("Set as Admin");
 
+        lblLogsInfo.setText("logs info");
+
+        lblLogoutDevice.setForeground(new java.awt.Color(0, 0, 255));
+        lblLogoutDevice.setText("Log out from this device");
+        lblLogoutDevice.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblLogoutDevice.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblLogoutDeviceMouseClicked(evt);
+            }
+        });
+
+        lblLogoutUser.setForeground(new java.awt.Color(0, 0, 255));
+        lblLogoutUser.setText("Log out from ALL other devices");
+        lblLogoutUser.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblLogoutUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblLogoutUserMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -148,12 +187,15 @@ public class Form_UserSettings extends javax.swing.JFrame {
                                 .addComponent(chbSetAdmin))
                             .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel4)
-                    .addComponent(lblErrorMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(74, Short.MAX_VALUE))
+                    .addComponent(lblErrorMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblLogoutDevice)
+                    .addComponent(lblLogoutUser)
+                    .addComponent(lblLogsInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jLabel4)
@@ -182,6 +224,12 @@ public class Form_UserSettings extends javax.swing.JFrame {
                 .addComponent(btnUpdate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblErrorMessage)
+                .addGap(45, 45, 45)
+                .addComponent(lblLogsInfo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblLogoutDevice)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblLogoutUser)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -197,7 +245,7 @@ public class Form_UserSettings extends javax.swing.JFrame {
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         //System.out.println(txtPass1.getPassword() +" --- "+txtPass2.getPassword());
         //System.out.println(txtPass1.getPassword().toString()+" --- "+txtPass2.getText());
-        if (user.isAdmin())
+        if (this.access_type == 1)
             this.validateAsAdmin();
         else
             this.validateInputs();
@@ -205,6 +253,14 @@ public class Form_UserSettings extends javax.swing.JFrame {
         
         lblErrorMessage.setVisible(true);
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void lblLogoutDeviceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutDeviceMouseClicked
+        new LoginsTable().logout();
+    }//GEN-LAST:event_lblLogoutDeviceMouseClicked
+
+    private void lblLogoutUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutUserMouseClicked
+        new LoginsTable().logAllSessionOut(null);
+    }//GEN-LAST:event_lblLogoutUserMouseClicked
 
     private void validateAsAdmin(){
         if (txtName.getText().length() < 1)
@@ -313,6 +369,9 @@ public class Form_UserSettings extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblErrorMessage;
+    private javax.swing.JLabel lblLogoutDevice;
+    private javax.swing.JLabel lblLogoutUser;
+    private javax.swing.JLabel lblLogsInfo;
     private javax.swing.JList lstMenu;
     private javax.swing.JTextField txtName;
     private javax.swing.JPasswordField txtOldPass;

@@ -51,6 +51,23 @@ public class LoginsTable {
         return false;
     }
     
+    public boolean logAllSessionOut(String username){
+        String mac_address = new Tool().getMAC_Address();
+        try {
+            database.connect();
+            ps = database.prepareStatement("Delete FROM logins WHERE user=? AND mac_address<>?");
+
+            ps.setString(1, username);
+            ps.setString(1, mac_address);
+            
+            ps.executeQuery();
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
     public boolean isLoggedIn(){
         String mac_address = new Tool().getMAC_Address();
         boolean isLoggedIn = false;   
@@ -88,7 +105,7 @@ public class LoginsTable {
         return log;
     }
     
-    public int numberOfDevicesRegistered(String username){
+    public int getNumberOfDevicesRegistered(String username){
         int count = 0;   
         try {
             database.connect();
@@ -101,6 +118,7 @@ public class LoginsTable {
             
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+            //System.out.println(count);
         }
         return count;
     }
