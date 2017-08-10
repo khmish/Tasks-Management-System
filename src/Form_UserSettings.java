@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -54,6 +56,9 @@ public class Form_UserSettings extends javax.swing.JFrame {
         lblErrorMessage.setVisible(false);
         lblErrorMessage.setHorizontalAlignment(SwingConstants.CENTER);
         
+        if(this.user.isAdmin()) lblAdminSettings.setVisible(true);
+        else lblAdminSettings.setVisible(false);
+        
         LoginsTable logsTable = new LoginsTable();
         int logs = logsTable.getNumberOfDevicesRegistered(user.getUserName()) - 1;
         if (logs == 1){
@@ -94,6 +99,7 @@ public class Form_UserSettings extends javax.swing.JFrame {
         lblLogsInfo = new javax.swing.JLabel();
         lblLogoutDevice = new javax.swing.JLabel();
         lblLogoutUser = new javax.swing.JLabel();
+        lblAdminSettings = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -159,6 +165,15 @@ public class Form_UserSettings extends javax.swing.JFrame {
             }
         });
 
+        lblAdminSettings.setForeground(new java.awt.Color(0, 0, 255));
+        lblAdminSettings.setText("Admin Settings");
+        lblAdminSettings.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblAdminSettings.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblAdminSettingsMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -168,37 +183,48 @@ public class Form_UserSettings extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblAdminSettings))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(txtUser, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtOldPass, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnUpdate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
-                                    .addComponent(txtPass1, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtPass2, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(chbSetAdmin))
-                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel4)
-                    .addComponent(lblErrorMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblLogoutDevice)
-                    .addComponent(lblLogoutUser)
-                    .addComponent(lblLogsInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(51, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(txtUser, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtOldPass, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnUpdate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                                            .addComponent(txtPass1, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtPass2, javax.swing.GroupLayout.Alignment.LEADING))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(chbSetAdmin))
+                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lblErrorMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblLogoutDevice)
+                            .addComponent(lblLogoutUser)
+                            .addComponent(lblLogsInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 45, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel4)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblAdminSettings)))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -261,6 +287,11 @@ public class Form_UserSettings extends javax.swing.JFrame {
     private void lblLogoutUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutUserMouseClicked
         new LoginsTable().logAllSessionOut(null);
     }//GEN-LAST:event_lblLogoutUserMouseClicked
+
+    private void lblAdminSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblAdminSettingsMouseClicked
+        Dialog_AdminSettings form = new Dialog_AdminSettings(new JFrame(), false);
+        form.setVisible(true);
+    }//GEN-LAST:event_lblAdminSettingsMouseClicked
 
     private void validateAsAdmin(){
         if (txtName.getText().length() < 1)
@@ -368,6 +399,7 @@ public class Form_UserSettings extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblAdminSettings;
     private javax.swing.JLabel lblErrorMessage;
     private javax.swing.JLabel lblLogoutDevice;
     private javax.swing.JLabel lblLogoutUser;
