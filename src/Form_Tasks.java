@@ -326,7 +326,7 @@ public class Form_Tasks extends javax.swing.JFrame {
     }//GEN-LAST:event_tblTasksToCloseMouseClicked
 
     private void lblNewTaskMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNewTaskMouseClicked
-        new Dialog_TaskInfo().setVisible(true);
+        new Dialog_TaskInfo(user).setVisible(true);
     }//GEN-LAST:event_lblNewTaskMouseClicked
 
     
