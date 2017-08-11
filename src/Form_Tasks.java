@@ -25,8 +25,8 @@ public class Form_Tasks extends javax.swing.JFrame {
         new Tool().CenterForm(this);
         this.user = user;
         settings_form = new Form_UserSettings(user, 0, this);
-        receivedTasks = tasksTable.getReceivedTasks(user.getUserName());
-        sentTasks = tasksTable.getSentTasks(user.getUserName());
+        receivedTasks = tasksTable.getReceivedTasks(user.getUsername());
+        sentTasks = tasksTable.getSentTasks(user.getUsername());
         lstMenu.setSelectedIndex(0);
         //btnClose.setEnabled(false);
         //btnReturn.setEnabled(false);
@@ -305,14 +305,6 @@ public class Form_Tasks extends javax.swing.JFrame {
             Task task = tasksTable.getTask(task_id);
             new Dialog_TaskInfo(task).setVisible(true);
         }
-        if(tblTasksToClose.getSelectedRowCount() == 1){
-            btnClose.setEnabled(true);
-            btnReturn.setEnabled(true);
-        }
-        else{
-            btnClose.setEnabled(false);
-            btnReturn.setEnabled(false);
-        }
     }//GEN-LAST:event_tblTasksMouseClicked
 
     
@@ -323,6 +315,16 @@ public class Form_Tasks extends javax.swing.JFrame {
             Task task = tasksTable.getTask(task_id);
             new Dialog_TaskInfo(task).setVisible(true);
          }
+         
+         
+        if(tblTasksToClose.getSelectedRowCount() == 1){
+            btnClose.setEnabled(true);
+            btnReturn.setEnabled(true);
+        }
+        else{
+            btnClose.setEnabled(false);
+            btnReturn.setEnabled(false);
+        }
     }//GEN-LAST:event_tblTasksToCloseMouseClicked
 
     private void lblNewTaskMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNewTaskMouseClicked

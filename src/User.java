@@ -73,7 +73,7 @@ public class User {
         this.name = name;
     }
 
-    public String getUserName() {
+    public String getUsername() {
         return userName;
     }
 
@@ -82,7 +82,7 @@ public class User {
      *
      * @param userName new value of userName
      */
-    public void setUserName(String userName) {
+    public void setUsername(String userName) {
         this.userName = userName;
     }
 

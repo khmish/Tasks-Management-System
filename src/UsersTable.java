@@ -29,12 +29,12 @@ public class UsersTable {
 
     }
 
-    public boolean Insert(User user) {
+    public boolean insert(User user) {
         
         try {//an example of update DB-------change the update statement to delete of insert
            database.connect();
             ps = database.prepareStatement("INSERT INTO users VALUES(?,?,?,?)");
-            ps.setString(1, user.getUserName());
+            ps.setString(1, user.getUsername());
             ps.setString(2, user.getName());
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getUnitCode());
@@ -48,7 +48,7 @@ public class UsersTable {
         return false;
     }
 
-    public boolean Delete(User user) {
+    public boolean delete(User user) {
         try {//an example of update DB-------change the update statement to delete of insert
             
             ps.executeUpdate();
@@ -59,7 +59,7 @@ public class UsersTable {
         return false;
     }
 
-    public boolean Update(User user) {
+    public boolean update(User user) {
         try {//an example of update DB-------change the update statement to delete of insert
             
             // call executeUpdate to execute our sql update statement
@@ -71,15 +71,19 @@ public class UsersTable {
         return false;
     }
 
-    public boolean UpdatePass(String username, String newPassword) {
+    public boolean updateName(String username, String name) {
+        return false;
+    }
+    
+    public boolean updatePass(String username, String newPassword) {
         return false;
     }
 
-    public ArrayList Search(String criteria) {
+    public ArrayList search(String criteria) {
         return null;
     }
 
-    public User getUser(User user) {
+    public User getUser(String username) {
         return null;
     }
 

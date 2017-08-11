@@ -29,13 +29,22 @@ public class Form_UserSettings extends javax.swing.JFrame {
     
     public Form_UserSettings(User user, int access_type, Form_Tasks tasksForm) {
         initComponents();
-        new Tool().CenterForm(this);
-        this.user = user;
         this.access_type = access_type;
         this.tasksForm = tasksForm;
+        setup(user);
+    }
+    public Form_UserSettings(User user, int access_type) {
+        initComponents();
+        this.access_type = access_type;
+        setup(user);
+    }
+    
+    private void setup(User user){
+        new Tool().CenterForm(this);
+        this.user = user;
         
         txtName.setText(user.getName());
-        txtUser.setText(user.getUserName());
+        txtUser.setText(user.getUsername());
             
         if (this.access_type == 1){
             txtName.setEditable(true);
@@ -60,7 +69,7 @@ public class Form_UserSettings extends javax.swing.JFrame {
         else lblAdminSettings.setVisible(false);
         
         LoginsTable logsTable = new LoginsTable();
-        int logs = logsTable.getNumberOfDevicesRegistered(user.getUserName()) - 1;
+        int logs = logsTable.getNumberOfDevicesRegistered(user.getUsername()) - 1;
         if (logs == 1){
             lblLogsInfo.setText("There are no other devices connected to your account");
             lblLogoutUser.setEnabled(false);
@@ -307,7 +316,7 @@ public class Form_UserSettings extends javax.swing.JFrame {
             user.setPassword(txtPass1.getText());
             user.setAdmin(chbSetAdmin.isSelected());
             
-            boolean updated = new UsersTable().Update(user);
+            boolean updated = new UsersTable().update(user);
             if(updated){
                 JOptionPane.showMessageDialog(null, "Changes have been updated successfully!");
                 this.clearPasswords();
@@ -331,7 +340,7 @@ public class Form_UserSettings extends javax.swing.JFrame {
             lblErrorMessage.setText("Passwords does not match");
         else{
             
-            boolean updated = new UsersTable().UpdatePass(user.getName(), txtPass1.getText());
+            boolean updated = new UsersTable().updatePass(user.getName(), txtPass1.getText());
             if(updated){
                 JOptionPane.showMessageDialog(null, "Changes have been updated successfully!");
                 this.clearPasswords();

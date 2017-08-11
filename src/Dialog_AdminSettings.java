@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,15 +14,34 @@
  */
 public class Dialog_AdminSettings extends javax.swing.JDialog {
 
-    /**
-     * Creates new form Dialog_AdminSettings
-     */
+    UsersTable usersTable = new UsersTable();
+    ArrayList usersList;
+    User user;
+    
+    public Dialog_AdminSettings(User user){
+        super(new java.awt.Frame(), false);
+        initComponents();
+        new Tool().CenterForm(this);
+        this.user = user;
+        updateTable();
+        lblEdit.setEnabled(false);
+        lblDelete.setEnabled(false);
+        lblLoadStatus.setText("");
+    }
     public Dialog_AdminSettings(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        new Tool().CenterForm(this);
     }
 
+    private void updateTable(){
+        usersList = usersTable.getAllUser();
+        for(int i = 0; i < usersList.size(); i++){
+            User user = (User) usersList.get(0);
+            Object[] row = {user.getUsername(), user.getName()};
+            DefaultTableModel model = (DefaultTableModel) tblUsers.getModel();
+            model.addRow(row);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,10 +69,21 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         btnAddUser1 = new javax.swing.JButton();
+        lblDelete = new javax.swing.JLabel();
+        lblEdit = new javax.swing.JLabel();
+        lblUserAddedMes = new javax.swing.JLabel();
+        chbSetAdmin = new javax.swing.JCheckBox();
+        lblAuthAddedMes = new javax.swing.JLabel();
+        lblLoadStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         btnAddUser.setText("Add User");
+        btnAddUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAddUserMouseClicked(evt);
+            }
+        });
         btnAddUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddUserActionPerformed(evt);
@@ -100,6 +134,11 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
                 return types [columnIndex];
             }
         });
+        tblUsers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblUsersMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblUsers);
 
         btnSearchAssignor.setText("Search Assignor");
@@ -116,10 +155,34 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
             }
         });
 
+        txtName.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtNameInputMethodTextChanged(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
+
         jLabel4.setText("Name displays here");
+
+        txtUsername.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtUsernameInputMethodTextChanged(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         jLabel5.setText("User Authorties");
+
+        txtPassword.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtPasswordInputMethodTextChanged(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
         jLabel6.setText("Users");
@@ -134,6 +197,36 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
             }
         });
 
+        lblDelete.setForeground(new java.awt.Color(0, 0, 255));
+        lblDelete.setText("Delete");
+        lblDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblDelete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblDeleteMouseClicked(evt);
+            }
+        });
+
+        lblEdit.setForeground(new java.awt.Color(0, 0, 255));
+        lblEdit.setText("Edit");
+        lblEdit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblEdit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblEditMouseClicked(evt);
+            }
+        });
+
+        lblUserAddedMes.setForeground(new java.awt.Color(0, 140, 0));
+        lblUserAddedMes.setText("User has been added");
+
+        chbSetAdmin.setText("Set as admin");
+
+        lblAuthAddedMes.setForeground(new java.awt.Color(0, 140, 0));
+        lblAuthAddedMes.setText("User has been added");
+
+        lblLoadStatus.setFont(new java.awt.Font("Lucida Grande", 2, 12)); // NOI18N
+        lblLoadStatus.setForeground(new java.awt.Color(102, 102, 102));
+        lblLoadStatus.setText("Load status");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -141,40 +234,63 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(lblLoadStatus)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblEdit)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblDelete))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnSearchAssignor))
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1)
-                            .addComponent(jScrollPane2))
-                        .addGap(18, 18, 18)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel1)
-                                .addComponent(txtName)
-                                .addComponent(jLabel2)
-                                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel3)
-                                .addComponent(btnAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnUpdateAuthority, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(btnAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnUpdateAuthority, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(chbSetAdmin))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(45, 45, 45)
+                                .addComponent(lblAuthAddedMes)))))
+                .addContainerGap(20, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(290, 290, 290)
                 .addComponent(btnAddUser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(290, 290, 290))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblUserAddedMes)
+                .addGap(48, 48, 48))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jLabel6)
-                .addGap(18, 18, 18)
+                .addGap(5, 5, 5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDelete)
+                    .addComponent(lblEdit)
+                    .addComponent(lblLoadStatus))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -191,7 +307,9 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(chbSetAdmin))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -199,11 +317,16 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblUserAddedMes)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUpdateAuthority, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnUpdateAuthority, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblAuthAddedMes)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(btnAddUser1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
@@ -213,7 +336,25 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUserActionPerformed
-        // TODO add your handling code here:
+        lblLoadStatus.setText("Adding user... (Please wait)");
+        int isAdmin;
+        if (chbSetAdmin.isSelected()) isAdmin = 1; else isAdmin=0;
+        User user = new User(txtUsername.getText(), txtName.getText(), txtPassword.getText(), isAdmin, this.user.getUnitCode());
+        boolean inserted = usersTable.insert(user);
+        if (inserted){
+            txtName.setText("");
+            txtUsername.setText("");
+            txtPassword.setText("");
+            chbSetAdmin.setSelected(false);
+            lblUserAddedMes.setVisible(true);
+            
+            Object[] row = {user.getUsername(), user.getName()};
+            DefaultTableModel model = (DefaultTableModel) tblUsers.getModel();
+            model.addRow(row);
+        }
+        else
+            JOptionPane.showMessageDialog(null, "A problem occured while trying to add user. Please contact system developer");
+        lblLoadStatus.setText("");
     }//GEN-LAST:event_btnAddUserActionPerformed
 
     private void btnSearchAssignorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchAssignorActionPerformed
@@ -227,6 +368,88 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
     private void btnAddUser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUser1ActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnAddUser1ActionPerformed
+
+    private void tblUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsersMouseClicked
+        if (tblUsers.getSelectedRowCount() == 1){
+            lblEdit.setEnabled(true);
+            lblDelete.setEnabled(true);
+        }
+        else{
+            lblEdit.setEnabled(false);
+            lblDelete.setEnabled(false);
+        }
+            
+        
+    }//GEN-LAST:event_tblUsersMouseClicked
+
+    private void btnAddUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddUserMouseClicked
+        
+    }//GEN-LAST:event_btnAddUserMouseClicked
+
+    private boolean needUpdate = false;
+    void setNeedUpdate(){
+        needUpdate = true;
+    }
+    private void lblEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEditMouseClicked
+        
+        if (tblUsers.getSelectedRowCount() == 1){
+            int row = tblUsers.getSelectedRow();
+            String username = (String) tblUsers.getValueAt(row, 0);
+            User user = new UsersTable().getUser(username);
+            new Dialog_UserUpdate(user, this).setVisible(true);
+            if (needUpdate){
+                lblLoadStatus.setText("Refreshing table... (Please wait)");
+                updateTable();
+                needUpdate = false;
+            }
+        }
+    }//GEN-LAST:event_lblEditMouseClicked
+
+    private void lblDeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblDeleteMouseClicked
+        
+        if (tblUsers.getSelectedRowCount() == 1){
+            lblLoadStatus.setText("Removing user... (Please wait)");
+            int row = tblUsers.getSelectedRow();
+            String username = (String) tblUsers.getValueAt(row, 0);
+            User user = new UsersTable().getUser(username);
+            boolean deleted = new UsersTable().delete(user);
+            
+            if(deleted){
+                tblUsers.remove(row);
+                lblLoadStatus.setText("");
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Could not delete user at this time, please try again later");
+            
+        }
+    }//GEN-LAST:event_lblDeleteMouseClicked
+
+    private void txtNameInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtNameInputMethodTextChanged
+        if(txtName.getText().length() > 0 && txtUsername.getText().length() > 4 && txtPassword.getText().length() > 0)
+            btnAddUser.setEnabled(true);
+        else
+            btnAddUser.setEnabled(false);
+        
+        lblUserAddedMes.setVisible(false);
+    }//GEN-LAST:event_txtNameInputMethodTextChanged
+
+    private void txtUsernameInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtUsernameInputMethodTextChanged
+        if(txtName.getText().length() > 0 && txtUsername.getText().length() > 4 && txtPassword.getText().length() > 0)
+            btnAddUser.setEnabled(true);
+        else
+            btnAddUser.setEnabled(false);
+        
+        lblUserAddedMes.setVisible(false);
+    }//GEN-LAST:event_txtUsernameInputMethodTextChanged
+
+    private void txtPasswordInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtPasswordInputMethodTextChanged
+        if(txtName.getText().length() > 0 && txtUsername.getText().length() > 4 && txtPassword.getText().length() > 0)
+            btnAddUser.setEnabled(true);
+        else
+            btnAddUser.setEnabled(false);
+        
+        lblUserAddedMes.setVisible(false);
+    }//GEN-LAST:event_txtPasswordInputMethodTextChanged
 
     /**
      * @param args the command line arguments
@@ -275,6 +498,7 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
     private javax.swing.JButton btnAddUser1;
     private javax.swing.JButton btnSearchAssignor;
     private javax.swing.JButton btnUpdateAuthority;
+    private javax.swing.JCheckBox chbSetAdmin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -283,6 +507,11 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblAuthAddedMes;
+    private javax.swing.JLabel lblDelete;
+    private javax.swing.JLabel lblEdit;
+    private javax.swing.JLabel lblLoadStatus;
+    private javax.swing.JLabel lblUserAddedMes;
     private javax.swing.JTable tblAuthorities;
     private javax.swing.JTable tblUsers;
     private javax.swing.JTextField txtName;
@@ -290,4 +519,8 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
     private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
+
+    private Form_UserSettings Form_UserSettings(User u, int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
