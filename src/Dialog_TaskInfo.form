@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="statusGroup">
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
   </Properties>
@@ -53,7 +57,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtSubject1" min="-2" pref="210" max="-2" attributes="0"/>
+                          <Component id="txtTo" min="-2" pref="210" max="-2" attributes="0"/>
                           <Component id="txtDueDate" alignment="0" min="-2" pref="125" max="-2" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                               <Component id="txtSubject" alignment="0" max="32767" attributes="0"/>
@@ -67,7 +71,7 @@
                                   <Component id="btnSend" min="-2" pref="92" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <Component id="txtSubject2" alignment="0" min="-2" pref="210" max="-2" attributes="0"/>
+                          <Component id="txtFrom" alignment="0" min="-2" pref="210" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -94,12 +98,12 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtSubject2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtFrom" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtSubject1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtTo" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -201,11 +205,17 @@
     </Component>
     <Component class="javax.swing.JRadioButton" name="radInProgress">
       <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="statusGroup"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="In progress"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JRadioButton" name="radCompleted">
       <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="statusGroup"/>
+        </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="0" green="9c" red="0" type="rgb"/>
         </Property>
@@ -214,13 +224,16 @@
     </Component>
     <Component class="javax.swing.JRadioButton" name="radClosed">
       <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="statusGroup"/>
+        </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="0" green="0" red="c2" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Closed"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtSubject1">
+    <Component class="javax.swing.JTextField" name="txtTo">
       <Properties>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>
       </Properties>
@@ -230,7 +243,7 @@
         <Property name="text" type="java.lang.String" value="To"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtSubject2">
+    <Component class="javax.swing.JTextField" name="txtFrom">
       <Properties>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>
       </Properties>

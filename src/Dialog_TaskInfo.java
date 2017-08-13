@@ -1,4 +1,5 @@
 
+import java.util.Date;
 import javax.swing.JFrame;
 
 /*
@@ -6,34 +7,40 @@ import javax.swing.JFrame;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author salehalmakki
  */
 public class Dialog_TaskInfo extends javax.swing.JDialog {
+
     Task task = new Task();
     User user;
-    public Dialog_TaskInfo(){
+    TasksTable taskTable = new TasksTable();
+    int status = -1;// if the status= 1 update, status=2 insert 
+
+    public Dialog_TaskInfo() {
         super(new java.awt.Frame(), true);
         initComponents();
     }
-    
+
     //this method to open created task (already exist)
-    public Dialog_TaskInfo(Task task){
+    public Dialog_TaskInfo(Task task) {
         super(new java.awt.Frame(), true);
         initComponents();
         new Tool().CenterForm(this);
         this.task = task;
+        status = 1;
     }
-    
+
     //this constructor to create new task (needs user to set as assignor)
-    public Dialog_TaskInfo(User user){
+    public Dialog_TaskInfo(User user) {
         super(new java.awt.Frame(), true);
         initComponents();
         new Tool().CenterForm(this);
         this.user = user;
+        status = 2;
     }
+
     public Dialog_TaskInfo(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -48,6 +55,7 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        statusGroup = new javax.swing.ButtonGroup();
         lblTaskID = new javax.swing.JLabel();
         Title = new javax.swing.JLabel();
         btnSend = new javax.swing.JButton();
@@ -62,9 +70,9 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
         radInProgress = new javax.swing.JRadioButton();
         radCompleted = new javax.swing.JRadioButton();
         radClosed = new javax.swing.JRadioButton();
-        txtSubject1 = new javax.swing.JTextField();
+        txtTo = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtSubject2 = new javax.swing.JTextField();
+        txtFrom = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -99,19 +107,22 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
 
         jLabel4.setText("Status");
 
+        statusGroup.add(radInProgress);
         radInProgress.setText("In progress");
 
+        statusGroup.add(radCompleted);
         radCompleted.setForeground(new java.awt.Color(0, 156, 0));
         radCompleted.setText("Completed");
 
+        statusGroup.add(radClosed);
         radClosed.setForeground(new java.awt.Color(194, 0, 0));
         radClosed.setText("Closed");
 
-        txtSubject1.setName(""); // NOI18N
+        txtTo.setName(""); // NOI18N
 
         jLabel5.setText("To");
 
-        txtSubject2.setName(""); // NOI18N
+        txtFrom.setName(""); // NOI18N
 
         jLabel6.setText("From");
 
@@ -144,7 +155,7 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
                             .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSubject1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTo, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtDueDate, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(txtSubject, javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,7 +166,7 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
                                     .addComponent(Title)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(txtSubject2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -173,11 +184,11 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(txtSubject2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtSubject1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
@@ -204,6 +215,29 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
         // TODO add your handling code here:
+
+        task.setAssignee(txtTo.getText());
+        //task.setAssignor(assignor);
+        task.setCreatedDate(new Date().toString());
+        task.setDetails(txtDetails.getText());
+        task.setDueDate(txtDueDate.getText());
+        task.setStatus(statusGroup.getButtonCount());
+        task.setSubject(txtSubject.getText());
+        
+        //task.setUnitCode(unit_code);
+        
+        // if the status=1 update task
+        if (status == 1) 
+        {
+            task.setTaskID(task.getTaskID());
+            taskTable.update(task);
+        }// if the status=2 add new task
+        else if (status == 2) 
+        {
+            task.setTaskID(taskTable.getNewID());
+            taskTable.insert(task);
+        }
+
     }//GEN-LAST:event_btnSendActionPerformed
 
     /**
@@ -262,10 +296,11 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
     private javax.swing.JRadioButton radClosed;
     private javax.swing.JRadioButton radCompleted;
     private javax.swing.JRadioButton radInProgress;
+    private javax.swing.ButtonGroup statusGroup;
     private javax.swing.JTextArea txtDetails;
     private javax.swing.JFormattedTextField txtDueDate;
+    private javax.swing.JTextField txtFrom;
     private javax.swing.JTextField txtSubject;
-    private javax.swing.JTextField txtSubject1;
-    private javax.swing.JTextField txtSubject2;
+    private javax.swing.JTextField txtTo;
     // End of variables declaration//GEN-END:variables
 }
