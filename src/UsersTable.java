@@ -90,5 +90,11 @@ public class UsersTable {
     public ArrayList getAllUser() {
         return null;
     }
+    
+    public boolean isRegistered(String username)
+    {
+        
+        return false;
+    }
 
 }
