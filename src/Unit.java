@@ -12,12 +12,14 @@ public class Unit {
     private String unit_code;
     private String name;
     private String contact_info;
+    private int isOpenAuthorties;
     private String note;
     
-    Unit(String unit_code, String name, String contact_info, String note){
+    Unit(String unit_code, String name, String contact_info, int isOpenAuth, String note){
         this.unit_code = unit_code;
         this.name = name;
         this.contact_info = contact_info;
+        this.isOpenAuthorties = isOpenAuth;
         this.note = note;
     }
     
@@ -31,6 +33,10 @@ public class Unit {
     
     public String getContactInfo(){
         return this.contact_info;
+    }
+    
+    public int getOpenAuthorties(){
+        return this.isOpenAuthorties;
     }
     
     public String getNote(){

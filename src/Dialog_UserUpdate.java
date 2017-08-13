@@ -189,7 +189,7 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
         lblConfirmationMessage.setText("");
         btnUpdatePassword.setText("Please Wait...");
         
-        boolean updated = new UsersTable().updatePass(txtUsername.getText(), txtPassword.getText());
+        boolean updated = new UsersTable().updatePassword(txtUsername.getText(), txtPassword.getText());
         if (updated){
             lblConfirmationMessage.setForeground(new java.awt.Color(0, 150, 0));
             lblConfirmationMessage.setText("User's password has been updated successfully");

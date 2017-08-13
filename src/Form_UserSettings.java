@@ -1,10 +1,4 @@
 
-import java.awt.Color;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -23,19 +17,16 @@ public class Form_UserSettings extends javax.swing.JFrame {
     /**
      * Creates new form FormSettings
      */
-    int access_type; // if 1, access as an administrator. 0, access as normal user
     User user;
     Form_Tasks tasksForm;
     
-    public Form_UserSettings(User user, int access_type, Form_Tasks tasksForm) {
+    public Form_UserSettings(User user, Form_Tasks tasksForm) {
         initComponents();
-        this.access_type = access_type;
         this.tasksForm = tasksForm;
         setup(user);
     }
     public Form_UserSettings(User user, int access_type) {
         initComponents();
-        this.access_type = access_type;
         setup(user);
     }
     
@@ -46,22 +37,12 @@ public class Form_UserSettings extends javax.swing.JFrame {
         txtName.setText(user.getName());
         txtUser.setText(user.getUsername());
             
-        if (this.access_type == 1){
-            txtName.setEditable(true);
-            txtUser.setEditable(false);
-            chbSetAdmin.setVisible(true);
-            txtOldPass.setEditable(false);
-            txtPass1.setEditable(true);
-            txtPass2.setEditable(true);
-        }
-        else{
-            txtName.setEditable(false);
-            txtUser.setEditable(false);
-            chbSetAdmin.setVisible(false);
-            txtOldPass.setEditable(true);
-            txtPass1.setEditable(true);
-            txtPass2.setEditable(true);
-        }
+        txtName.setEditable(false);
+        txtUser.setEditable(false);
+        chbSetAdmin.setVisible(false);
+        txtOldPass.setEditable(true);
+        txtPass1.setEditable(true);
+        txtPass2.setEditable(true);
         lblErrorMessage.setVisible(false);
         lblErrorMessage.setHorizontalAlignment(SwingConstants.CENTER);
         
@@ -280,10 +261,7 @@ public class Form_UserSettings extends javax.swing.JFrame {
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         //System.out.println(txtPass1.getPassword() +" --- "+txtPass2.getPassword());
         //System.out.println(txtPass1.getPassword().toString()+" --- "+txtPass2.getText());
-        if (this.access_type == 1)
-            this.validateAsAdmin();
-        else
-            this.validateInputs();
+        this.validateInputs();
         
         
         lblErrorMessage.setVisible(true);
@@ -298,34 +276,10 @@ public class Form_UserSettings extends javax.swing.JFrame {
     }//GEN-LAST:event_lblLogoutUserMouseClicked
 
     private void lblAdminSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblAdminSettingsMouseClicked
-        Dialog_AdminSettings form = new Dialog_AdminSettings(new JFrame(), false);
+        Dialog_AdminSettings form = new Dialog_AdminSettings(user);
         form.setVisible(true);
     }//GEN-LAST:event_lblAdminSettingsMouseClicked
 
-    private void validateAsAdmin(){
-        if (txtName.getText().length() < 1)
-            lblErrorMessage.setText("Name field cannot left blank");
-        else if (txtUser.getText().length() < 1)
-            lblErrorMessage.setText("Error with username");
-        else if(txtPass1.getText().length() < 4)
-            lblErrorMessage.setText("Password must be no less than 4 characters");
-        else if(!txtPass1.getText().equals(txtPass2.getText()))
-            lblErrorMessage.setText("Passwords does not match");
-        else{
-            user.setName(txtName.getText());
-            user.setPassword(txtPass1.getText());
-            user.setAdmin(chbSetAdmin.isSelected());
-            
-            boolean updated = new UsersTable().update(user);
-            if(updated){
-                JOptionPane.showMessageDialog(null, "Changes have been updated successfully!");
-                this.clearPasswords();
-                lblErrorMessage.setVisible(false);
-            }
-            else
-                lblErrorMessage.setText("Sorry, something went wrong while saving your changes!");
-        }
-    }
  
     private void validateInputs(){
         if (txtName.getText().length() < 1)
@@ -340,7 +294,7 @@ public class Form_UserSettings extends javax.swing.JFrame {
             lblErrorMessage.setText("Passwords does not match");
         else{
             
-            boolean updated = new UsersTable().updatePass(user.getName(), txtPass1.getText());
+            boolean updated = new UsersTable().updatePassword(user.getUsername(), txtPass1.getText());
             if(updated){
                 JOptionPane.showMessageDialog(null, "Changes have been updated successfully!");
                 this.clearPasswords();

@@ -35,7 +35,7 @@ public class UnitsTable {
             rs = ps.executeQuery();
             
             if (rs.next())
-                unit = new Unit(rs.getString(1), rs.getString(2),rs.getString(3),rs.getString(4));
+                unit = new Unit(rs.getString(1), rs.getString(2),rs.getString(3),rs.getInt(4), rs.getString(5));
             ps.close();
             
         } catch (SQLException ex) {
@@ -44,5 +44,53 @@ public class UnitsTable {
         
         return unit;
     }
+    
+    public void setOpenAuthorities(String unit_code, boolean isOpen){
+        Database database = new Database();
+        PreparedStatement ps;
+    
+        try {
+            database.connect();
+            if (isOpen)
+                ps = database.prepareStatement("UDATE units set isOpenAuthorties=1 WHERE unit_code=?");
+            else
+                ps = database.prepareStatement("UDATE units set isOpenAuthorties=0 WHERE unit_code=?");
+            
+            ps.setString(1, unit_code);
+            ps.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public boolean isOpenAuthorties(String unit_code){
+        Database database = new Database();
+        PreparedStatement ps;
+        ResultSet rs;
+        int status = 0;
+    
+        try {
+            database.connect();
+            ps = database.prepareStatement("SELECT isOpenAuthorties FROM units WHERE unit_code=?");
+            
+            ps.setString(1, unit_code);
+            rs = ps.executeQuery();
+            
+            if (rs.next())
+                status = rs.getInt(1);
+            ps.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if (status == 1)
+            return true;
+        else
+            return false;
+    }
+    
+    
     
 }

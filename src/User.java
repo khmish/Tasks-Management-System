@@ -16,6 +16,9 @@ public class User {
     private int isAdmin;
     private String unitId;
 
+    public User() {
+    }
+    
     public User(String userName, String pass, String name, int isAdmin, String unitId) {
 
         this.userName = userName;
@@ -31,6 +34,12 @@ public class User {
             this.isAdmin = 1;
         else
             this.isAdmin = 0;
+    }
+    public void setAdmin(int isAdmin){
+        this.isAdmin = isAdmin;
+    }
+    public int getAdmin(){
+        return this.isAdmin;
     }
     public boolean isAdmin(){
         if (this.isAdmin == 1) return true; 

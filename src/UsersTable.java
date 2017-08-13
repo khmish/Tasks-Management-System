@@ -32,39 +32,53 @@ public class UsersTable {
     public boolean insert(User user) {
         
         try {//an example of update DB-------change the update statement to delete of insert
-           database.connect();
-            ps = database.prepareStatement("INSERT INTO users VALUES(?,?,?,?)");
+            database.connect();
+            ps = database.prepareStatement("INSERT INTO users VALUES(?,?,?,?,?)");
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getName());
             ps.setString(3, user.getPassword());
+            ps.setInt(4, user.getAdmin());
             ps.setString(4, user.getUnitCode());
             
 
-            ps.executeQuery();
+            ps.executeUpdate();
             ps.close();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
 
-    public boolean delete(User user) {
+        public boolean update(User user) {
+        
         try {//an example of update DB-------change the update statement to delete of insert
+            database.connect();
+            ps = database.prepareStatement("UPDATE users set name=?, password=?, isAdmin=?, unit_code=? WHERE username=?");
+            ps.setString(5, user.getUsername());
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getPassword());
+            ps.setInt(3, user.getAdmin());
+            ps.setString(4, user.getUnitCode());
             
+
             ps.executeUpdate();
             ps.close();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
-
-    public boolean update(User user) {
+        
+    public boolean delete(String username) {
         try {//an example of update DB-------change the update statement to delete of insert
-            
-            // call executeUpdate to execute our sql update statement
+            database.connect();
+            ps = database.prepareStatement("DELETE FROM users WHERE username=?");
+            ps.setString(1, username);
             ps.executeUpdate();
             ps.close();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -72,23 +86,136 @@ public class UsersTable {
     }
 
     public boolean updateName(String username, String name) {
+        try {//an example of update DB-------change the update statement to delete of insert
+            database.connect();
+            ps = database.prepareStatement("UPDATE users set name=? WHERE username=?");
+            ps.setString(1, name);
+            ps.setString(2, username);
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
     
-    public boolean updatePass(String username, String newPassword) {
+    public boolean updatePassword(String username, String newPass) {
+        try {//an example of update DB-------change the update statement to delete of insert
+            database.connect();
+            ps = database.prepareStatement("UPDATE users set name=? WHERE username=?");
+            ps.setString(1, newPass);
+            ps.setString(2, username);
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
 
-    public ArrayList search(String criteria) {
-        return null;
+    public ArrayList search(String criteria, String unit_code) {
+        ArrayList array = new ArrayList();
+        try {
+            database.connect();
+            ps = database.prepareStatement("SELECT * FROM users WHERE username LIKE %?% OR name LIKE %?%"
+                    + "AND unit_id=?");
+            
+            ps.setString(1, criteria);
+            ps.setString(2, criteria);
+            ps.setString(3, unit_code);
+            
+            rs = ps.executeQuery();
+            
+            
+            while (rs.next()){
+                User user = new User();
+                
+                user.setUsername(rs.getString(1));
+                user.setPassword("");
+                user.setName(rs.getString(3));
+                user.setAdmin(rs.getInt(4));
+                user.setUnitCode(rs.getString(5));
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return array;
     }
 
-    public User getUser(String username) {
-        return null;
+    public ArrayList getAllUser(String unit_code) {
+        ArrayList array = new ArrayList();
+        try {
+            database.connect();
+            ps = database.prepareStatement("SELECT * FROM users WHERE unit_code=?");
+            
+            ps.setString(1, unit_code);
+            
+            rs = ps.executeQuery();
+            
+            
+            while (rs.next()){
+                User user = new User();
+                
+                user.setUsername(rs.getString(1));
+                user.setPassword("");
+                user.setName(rs.getString(3));
+                user.setAdmin(rs.getInt(4));
+                user.setUnitCode(rs.getString(5));
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return array;
     }
-
-    public ArrayList getAllUser() {
-        return null;
+    
+        public User getUser(String username, String unit_code) {
+        User user = new User();
+        try {
+            database.connect();
+            ps = database.prepareStatement("SELECT * FROM users WHERE username=? AND unit_code=?");
+            
+            ps.setString(1, username);
+            ps.setString(1, unit_code);
+            
+            rs = ps.executeQuery();
+            
+            
+            if (rs.next()){
+                user.setUsername(rs.getString(1));
+                user.setPassword("");
+                user.setName(rs.getString(3));
+                user.setAdmin(rs.getInt(4));
+                user.setUnitCode(rs.getString(5));
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return user;
+    }
+        
+    public boolean isRegistered(String username) {
+        try {
+            database.connect();
+            ps = database.prepareStatement("SELECT username FROM users WHERE username=?");
+            
+            ps.setString(1, username);
+            
+            rs = ps.executeQuery();
+            
+            
+            if (rs.next()){
+                return true;
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
     
     public boolean isRegistered(String username)
