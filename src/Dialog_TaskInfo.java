@@ -15,7 +15,7 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
 
     Task task = new Task();
     User user;
-    TasksTable taskTable = new TasksTable();
+    //TasksTable taskTable = new TasksTable();
     int status = -1;// if the status= 1 update, status=2 insert 
 
     public Dialog_TaskInfo() {
@@ -30,6 +30,9 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
         new Tool().CenterForm(this);
         this.task = task;
         status = 1;
+        //fill the database data into the form"TaskInfo"
+        fillTaskInfo(task);
+        
     }
 
     //this constructor to create new task (needs user to set as assignor)
@@ -74,6 +77,7 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         txtFrom = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -126,47 +130,53 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
 
         jLabel6.setText("From");
 
+        jLabel7.setText("jLabel7");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(radInProgress)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(radCompleted)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(radClosed))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel4)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(radInProgress)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(radCompleted)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(radClosed))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel3)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(56, 56, 56)
+                                        .addComponent(jLabel1))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(lblTaskID)))
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel6)
+                                .addComponent(jLabel5))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(56, 56, 56)
-                                    .addComponent(jLabel1))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(lblTaskID)))
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTo, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDueDate, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtSubject, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(6, 6, 6)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(Title)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(txtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(txtTo, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtDueDate, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txtSubject, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(Title)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(txtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(46, 46, 46)
+                        .addComponent(jLabel7)))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -207,7 +217,9 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
                     .addComponent(radCompleted)
                     .addComponent(radClosed)
                     .addComponent(jLabel4))
-                .addGap(34, 34, 34))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18))
         );
 
         pack();
@@ -221,7 +233,7 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
         task.setCreatedDate(new Date().toString());
         task.setDetails(txtDetails.getText());
         task.setDueDate(txtDueDate.getText());
-        task.setStatus(statusGroup.getButtonCount());
+        task.setStatus(getSelectedRadio());
         task.setSubject(txtSubject.getText());
         
         //task.setUnitCode(unit_code);
@@ -230,16 +242,53 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
         if (status == 1) 
         {
             task.setTaskID(task.getTaskID());
-            taskTable.update(task);
+            //taskTable.update(task);
         }// if the status=2 add new task
         else if (status == 2) 
         {
-            task.setTaskID(taskTable.getNewID());
-            taskTable.insert(task);
+            //task.setTaskID(taskTable.getNewID());
+           // taskTable.insert(task);
         }
 
     }//GEN-LAST:event_btnSendActionPerformed
-
+    
+    public int getSelectedRadio()
+    {
+        if (radInProgress.isSelected()) {
+            return 1;
+        }
+        else if (radCompleted.isSelected()) {
+            return 2;
+        }
+        else if (radClosed.isSelected()) {
+            return 3;
+        }
+        return -1;
+    }
+    // Auto fill database into jtextfields/radio/textArea once opened
+    public void fillTaskInfo(Task task)
+    {
+        setSelectedRadio(task);
+        txtDetails.setText(task.getDetails());
+        txtDueDate.setText(task.getDueDate());
+        txtFrom.setText(task.getAssignor());
+        txtSubject.setText(task.getSubject());
+        txtTo.setText(task.getAssignee());
+    }
+    public void setSelectedRadio(Task task)
+    {
+        if (task.getStatus()==1) {
+            radInProgress.setSelected(true);
+        }
+        else if (task.getStatus()==2) {
+            radCompleted.setSelected(true);
+        }
+        else if (task.getStatus()==3) {
+            radClosed.setSelected(true);
+        }
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -291,6 +340,7 @@ public class Dialog_TaskInfo extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTaskID;
     private javax.swing.JRadioButton radClosed;
