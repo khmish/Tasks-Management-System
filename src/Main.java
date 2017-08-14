@@ -12,15 +12,12 @@ import java.util.ArrayList;
  * @author salehalmakki
  */
 public class Main {
-    Main(){
-                
-    }
-    
-    
+
     public static void main(String args[]) { 
         //Authority auth = new Authority("Ali", "Khal", "AA");
         //boolean r = new AuthoritiesTable().delete(auth);
-        ArrayList array = new AuthoritiesTable().getAuthorities("s.almakki");
+        //System.out.println(r);
+        ArrayList array = new AuthoritiesTable().getAssignees("s.almakki");
         System.out.println(array);
         /*
         Login log = new LoginsTable().getLog();
