@@ -16,6 +16,11 @@ public class Authority {
 
     private String assigneeUserName;
 
+    Authority(String assignor, String assignee, String unit_code){
+        this.unitCode = unit_code;
+        this.assignorUserName = assignor;
+        this.assigneeUserName =  assignee;
+    }
     public String getAssigneeUserName() {
         return assigneeUserName;
     }

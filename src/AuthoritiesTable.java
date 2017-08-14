@@ -22,22 +22,24 @@ public class AuthoritiesTable {
     PreparedStatement ps;
     
     AuthoritiesTable(){
-        database.connect();
     }
     
     public boolean insert(Authority auth){
         
-        
         try {
+            //
             database.connect();
-            ps = database.prepareStatement("INSERT INTO authorites VALUES(?,?,?,?)");
-            ps.setString(1, "");
+            long authority_id = getNewID();
+            ps = database.prepareStatement("INSERT INTO authorities VALUES(?,?,?,?)");
+            ps.setLong(1, authority_id);
             ps.setString(2, auth.getAssignorUserName());
             ps.setString(3, auth.getAssigneeUserName());
-            ps.setString(3, auth.getUnitCode());
+            ps.setString(4, auth.getUnitCode());
 
-            ps.executeQuery();
+            ps.execute();
             ps.close();
+            database.close();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -48,11 +50,11 @@ public class AuthoritiesTable {
             
         try {
             database.connect();
-            ps = database.prepareStatement("DELETE FROM authorites WHERE assignor=? AND assignee=?");
+            ps = database.prepareStatement("DELETE FROM authorities WHERE assignor=? AND assignee=?");
             ps.setString(1, auth.getAssignorUserName());
             ps.setString(2, auth.getAssigneeUserName());
 
-            ps.executeQuery();
+            ps.execute();
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
@@ -60,12 +62,11 @@ public class AuthoritiesTable {
         return false;
     }
         
-    public ArrayList getAuthorities(String assignor){
+    public ArrayList getAssignees(String assignor){
             
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT assignee FROM authorties WHERE assignor=?");
-            
+            ps = database.prepareStatement("SELECT assignee FROM authorities WHERE assignor=?");
             ps.setString(1, assignor);
             
             rs = ps.executeQuery();
@@ -88,13 +89,10 @@ public class AuthoritiesTable {
     public long getNewID(){
         long id = -1;   
         try {
-            database.connect();
-            ps = database.prepareStatement("SELECT authority_id FROM authorties WHERE authority_id=MAX(authority_id)");
+            ps = database.prepareStatement("SELECT MAX(authority_id) FROM authorities");
             rs = ps.executeQuery();
             if (rs.next())
-                id = rs.getLong(1);
-            ps.close();
-            
+                id = rs.getInt(1) + 1;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
