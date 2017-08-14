@@ -56,6 +56,7 @@ public class AuthoritiesTable {
 
             ps.execute();
             ps.close();
+            database.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -76,6 +77,7 @@ public class AuthoritiesTable {
                 assignees.add(rs.getString(1));
             }
             ps.close();
+            database.close();
             return assignees;
             
         } catch (SQLException ex) {

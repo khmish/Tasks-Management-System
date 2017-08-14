@@ -16,9 +16,9 @@ import java.util.logging.Logger;
  */
 public class UsersTable {
 
-    Database database = new Database();
-    ResultSet rs;   //for SELECT, using excuteQuery()
-    PreparedStatement ps; ////for SELECT, using excute()
+    private Database database = new Database();
+    private ResultSet rs;   //for SELECT, using excuteQuery()
+    private PreparedStatement ps; ////for SELECT, using excute()
     // the construct is providing connection to DB
     public UsersTable() {
         //user ,pass, url
@@ -33,7 +33,7 @@ public class UsersTable {
         
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
-            ps = database.prepareStatement("INSERT INTO users VALUES(?,?,?,?,?)");
+            ps = database.prepareStatement("INSERT INTO Users VALUES(?,?,?,?,?)");
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getName());
             ps.setString(3, user.getPassword());
@@ -54,7 +54,7 @@ public class UsersTable {
         
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
-            ps = database.prepareStatement("UPDATE users set name=?, password=?, isAdmin=?, unit_code=? WHERE username=?");
+            ps = database.prepareStatement("UPDATE Users set name=?, password=?, isAdmin=?, unit_code=? WHERE username=?");
             ps.setString(5, user.getUsername());
             ps.setString(1, user.getName());
             ps.setString(2, user.getPassword());
@@ -74,7 +74,7 @@ public class UsersTable {
     public boolean delete(String username) {
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
-            ps = database.prepareStatement("DELETE FROM users WHERE username=?");
+            ps = database.prepareStatement("DELETE FROM Users WHERE username=?");
             ps.setString(1, username);
             ps.executeUpdate();
             ps.close();
@@ -88,7 +88,7 @@ public class UsersTable {
     public boolean updateName(String username, String name) {
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
-            ps = database.prepareStatement("UPDATE users set name=? WHERE username=?");
+            ps = database.prepareStatement("UPDATE Users set name=? WHERE username=?");
             ps.setString(1, name);
             ps.setString(2, username);
             ps.executeUpdate();
@@ -103,7 +103,7 @@ public class UsersTable {
     public boolean updatePassword(String username, String newPass) {
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
-            ps = database.prepareStatement("UPDATE users set name=? WHERE username=?");
+            ps = database.prepareStatement("UPDATE Users set name=? WHERE username=?");
             ps.setString(1, newPass);
             ps.setString(2, username);
             ps.executeUpdate();
@@ -119,7 +119,7 @@ public class UsersTable {
         boolean login = false;
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM users WHERE username=? AND password=?");
+            ps = database.prepareStatement("SELECT * FROM Users WHERE username=? AND password=?");
             
             ps.setString(1, username);
             ps.setString(2, pass);
@@ -142,7 +142,7 @@ public class UsersTable {
         ArrayList array = new ArrayList();
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM users WHERE username LIKE %?% OR name LIKE %?%"
+            ps = database.prepareStatement("SELECT * FROM Users WHERE username LIKE %?% OR name LIKE %?%"
                     + "AND unit_id=?");
             
             ps.setString(1, criteria);
@@ -172,7 +172,7 @@ public class UsersTable {
         ArrayList array = new ArrayList();
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM users WHERE unit_code=?");
+            ps = database.prepareStatement("SELECT * FROM Users WHERE unit_code=?");
             
             ps.setString(1, unit_code);
             
@@ -199,7 +199,7 @@ public class UsersTable {
         User user = new User();
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM users WHERE username=?");
+            ps = database.prepareStatement("SELECT * FROM Users WHERE username=?");
             
             ps.setString(1, username);
             
@@ -223,7 +223,7 @@ public class UsersTable {
     public boolean isRegistered(String username) {
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT username FROM users WHERE username=?");
+            ps = database.prepareStatement("SELECT username FROM Users WHERE username=?");
             
             ps.setString(1, username);
             
