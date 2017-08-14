@@ -15,22 +15,16 @@ public class Main {
     
     
     public static void main(String args[]) {    
-        /*
-                Connector db = new Connector();
-        if (db.hasConnection())
-            System.out.println("SUCESS");
-        else
-            System.out.println("FAIL");
-                */
-        //TasksTable tt = new TasksTable();
-        //tt.insert();
-        //Database db = new Database();
-        //System.out.println(db.hasConnection());
+        Login log = new LoginsTable().getLog();
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                User u = new User("assignedTo", "", "Saleh Almakki", 1, "AA");
-                
-                new Form_Tasks(u).setVisible(true);
+                if (log == null)
+                    new Form_Login().setVisible(true);
+                else{
+                    User user = new UsersTable().getUser(log.getUser());
+                    new Form_Tasks(user).setVisible(true);
+                }
             }
         });
     }

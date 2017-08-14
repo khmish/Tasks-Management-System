@@ -24,7 +24,7 @@ public class Form_Tasks extends javax.swing.JFrame {
         initComponents();
         new Tool().CenterForm(this);
         this.user = user;
-        settings_form = new Form_UserSettings(user, 0, this);
+        settings_form = new Form_UserSettings(user, this);
         receivedTasks = tasksTable.getReceivedTasks(user.getUsername());
         sentTasks = tasksTable.getSentTasks(user.getUsername());
         lstMenu.setSelectedIndex(0);

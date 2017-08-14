@@ -387,7 +387,7 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
         if (tblUsers.getSelectedRowCount() == 1){
             int row = tblUsers.getSelectedRow();
             String username = (String) tblUsers.getValueAt(row, 0);
-            User user = new UsersTable().getUser(username, this.unit_code);
+            User user = new UsersTable().getUser(username);
             new Dialog_UserUpdate(user, this).setVisible(true);
             if (needUpdate){
                 lblLoadStatus.setText("Refreshing table... (Please wait)");

@@ -115,6 +115,29 @@ public class UsersTable {
         return false;
     }
 
+    public boolean login(String username, String pass) {
+        boolean login = false;
+        try {
+            database.connect();
+            ps = database.prepareStatement("SELECT * FROM users WHERE username=? AND password=?");
+            
+            ps.setString(1, username);
+            ps.setString(2, pass);
+            
+            rs = ps.executeQuery();
+            
+            
+            while (rs.next()){
+                login = true;
+            }
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return login;
+    }
+    
+    
     public ArrayList search(String criteria, String unit_code) {
         ArrayList array = new ArrayList();
         try {
@@ -172,14 +195,13 @@ public class UsersTable {
         return array;
     }
     
-        public User getUser(String username, String unit_code) {
+        public User getUser(String username) {
         User user = new User();
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM users WHERE username=? AND unit_code=?");
+            ps = database.prepareStatement("SELECT * FROM users WHERE username=?");
             
             ps.setString(1, username);
-            ps.setString(1, unit_code);
             
             rs = ps.executeQuery();
             
@@ -215,12 +237,6 @@ public class UsersTable {
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
-    }
-    
-    public boolean isRegistered(String username)
-    {
-        
         return false;
     }
 
