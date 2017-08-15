@@ -14,12 +14,21 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String args[]) { 
+<<<<<<< Updated upstream
         //Authority auth = new Authority("Ali", "Khal", "AA");
         //boolean r = new AuthoritiesTable().delete(auth);
         //System.out.println(r);
         //ArrayList array = new AuthoritiesTable().getAssignees("s.almakki");
         //System.out.println(array);
         /*
+=======
+        //Login log = new LoginsTable().getLog();
+        //boolean r = new LoginsTable().logAllSessionOut("s.almakki");
+        //System.out.println(new LoginsTable().getNumberOfDevicesRegistered(log.getUser()));
+        //ArrayList array = new AuthoritiesTable().getAssignees("s.almakki");
+        //System.out.println(array);
+        
+>>>>>>> Stashed changes
         Login log = new LoginsTable().getLog();
         
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -32,6 +41,7 @@ public class Main {
                 }
             }
         });
+<<<<<<< Updated upstream
                 */
         //testing TasksTable-------------------------------------------------------------------------------------------
         /*TasksTable tasksTable= new TasksTable();
@@ -61,5 +71,8 @@ public class Main {
             
         }*/
         
+=======
+                
+>>>>>>> Stashed changes
     }
 }
