@@ -50,10 +50,16 @@ public class Main {
         //testing UserTable---------------------------------------------------------------------------------------------
         UsersTable usersTable= new UsersTable();
         User user = new User("hk_2006", "123123","Ali",0,"1");
-        usersTable.insert(user);
+        //usersTable.insert(user);
         //usersTable.delete(user.getUsername());
         //usersTable.updatePassword(user.getUsername(),"000");
         //System.out.println(usersTable.login(user.getUsername(),"100"));
+        //System.out.println(usersTable.isRegistered(user.getUsername()));
+        //ArrayList<User> arrayList=usersTable.getAllUser(user.getUnitCode());
+        /*for (int i = 0; i < arrayList.size(); i++) {
+            System.out.println(arrayList.get(i).getName());
+            
+        }*/
         
     }
 }
