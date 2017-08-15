@@ -24,6 +24,13 @@ public class TasksTable {
     
     TasksTable(){
         database.connect();
+        try {
+            if (database.isConnected()) {
+                System.out.println("DB is connected!");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TasksTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public boolean insert(Task task){
@@ -31,8 +38,8 @@ public class TasksTable {
         
         try {
             database.connect();
-            ps = database.prepareStatement("INSERT INTO tasks VALUES(?,?,?,?,?,?,?,?,?)");
-            ps.setLong(1, task.getTaskID());
+            ps = database.prepareStatement("INSERT INTO Tasks VALUES(?,?,?,?,?,?,?,?,?)");
+            ps.setLong(1, task.getTaskID());//get new id
             ps.setString(2, task.getCreatedDate());
             ps.setString(3, task.getAssignor());
             ps.setString(4, task.getAssignee());
@@ -42,7 +49,8 @@ public class TasksTable {
             ps.setInt(8, task.getStatus());
             ps.setString(9, task.getUnitCode());
 
-            ps.executeQuery();
+            int rows=ps.executeUpdate();
+            dbMessages(rows,"updated");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,8 +63,8 @@ public class TasksTable {
             
         try {
             database.connect();
-            ps = database.prepareStatement("UPDATE tasks SET createdDate=?, assignor=?, assignee=?, subject=?,"
-                    + "details=?, dueDate=?, status=?, unitCode=? WHERE task_id=?");
+            ps = database.prepareStatement("UPDATE Tasks SET created_date=?, assignor=?, assignee=?, subject=?,"
+                    + "details=?, due_date=?, status=?, unit_code=? WHERE task_id=?");
 
             ps.setString(1, task.getCreatedDate());
             ps.setString(2, task.getAssignor());
@@ -68,7 +76,8 @@ public class TasksTable {
             ps.setString(8, task.getUnitCode());
             ps.setLong(9, task.getTaskID());
 
-            ps.executeQuery();
+            int rows=ps.executeUpdate();
+            dbMessages(rows,"updated");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
@@ -80,12 +89,13 @@ public class TasksTable {
             
         try {
             database.connect();
-            ps = database.prepareStatement("UPDATE tasks SET status=? WHERE task_id=?");
+            ps = database.prepareStatement("UPDATE Tasks SET status=? WHERE task_id=?");
 
             ps.setInt(1, status);
             ps.setLong(2, task_id);
 
-            ps.executeQuery();
+            int rows=ps.executeUpdate();
+            dbMessages(rows,"updated");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
@@ -97,10 +107,11 @@ public class TasksTable {
             
         try {
             database.connect();
-            ps = database.prepareStatement("DELETE FROM tasks WHERE task_id=?");
+            ps = database.prepareStatement("DELETE FROM Tasks WHERE task_id=?");
             ps.setLong(1, task_id);
 
-            ps.executeQuery();
+            int rows=ps.executeUpdate();
+            dbMessages(rows,"deleted");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
@@ -244,10 +255,10 @@ public class TasksTable {
     }
     
     public long getNewID(){
-        long id = -1;   
+        long id = 0;   
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT task_id FROM tasks WHERE task_id=MAX(task_id)");
+            ps = database.prepareStatement("SELECT MAX(task_id) FROM Tasks");
             rs = ps.executeQuery();
             if (rs.next())
                 id = rs.getLong(1);
@@ -256,6 +267,14 @@ public class TasksTable {
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return id;
+        return id+1;
+    }
+    public void dbMessages(int rows,String type)
+    {
+        if (rows>0) {
+            System.out.println(rows+" rows have been "+type+"!" );
+        } else {
+            System.out.println(" NO CHANGES! ");
+        }
     }
 }
