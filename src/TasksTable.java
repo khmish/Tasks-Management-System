@@ -123,9 +123,9 @@ public class TasksTable {
             
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM tasks WHERE "
-                    + "(assignor LIKE %?% OR assignee LIKE %?% OR subject LIKE %?% OR details LIKE %?%)"
-                    + "AND unit_id=?");
+            ps = database.prepareStatement("SELECT * FROM Tasks WHERE "
+                    + "(assignor LIKE ? OR assignee LIKE ? OR subject LIKE ? OR details LIKE ?)"
+                    + "AND unit_code=?");
             
             ps.setString(1, criteria);
             ps.setString(2, criteria);
@@ -163,7 +163,7 @@ public class TasksTable {
             
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM tasks WHERE assignee=?");
+            ps = database.prepareStatement("SELECT * FROM Tasks WHERE assignee=?");
             ps.setString(1, assignee);
             rs = ps.executeQuery();
             ArrayList tasks = new ArrayList();
@@ -195,7 +195,7 @@ public class TasksTable {
             
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM tasks WHERE assignor=? ORDER BY status DESC");
+            ps = database.prepareStatement("SELECT * FROM Tasks WHERE assignor=? ORDER BY status DESC");
             ps.setString(1, assignor);
             rs = ps.executeQuery();
             ArrayList tasks = new ArrayList();
@@ -227,7 +227,7 @@ public class TasksTable {
             
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM tasks WHERE task_id=?");
+            ps = database.prepareStatement("SELECT * FROM Tasks WHERE task_id=?");
             
             ps.setLong(1, task_id);
             rs = ps.executeQuery();
@@ -269,6 +269,8 @@ public class TasksTable {
         }
         return id+1;
     }
+    
+    //shows messages from db and how many records have changed
     public void dbMessages(int rows,String type)
     {
         if (rows>0) {
