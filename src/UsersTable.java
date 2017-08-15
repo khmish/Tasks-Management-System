@@ -28,20 +28,28 @@ public class UsersTable {
         }
 
     }
-
+    public void dbMessages(int rows,String type)
+    {
+        if (rows>0) {
+            System.out.println(rows+" rows have been "+type+"!" );
+        } else {
+            System.out.println(" NO CHANGES! ");
+        }
+    }
     public boolean insert(User user) {
         
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
             ps = database.prepareStatement("INSERT INTO Users VALUES(?,?,?,?,?)");
             ps.setString(1, user.getUsername());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getPassword());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getName());
             ps.setInt(4, user.getAdmin());
-            ps.setString(4, user.getUnitCode());
+            ps.setString(5, user.getUnitCode());
             
 
-            ps.executeUpdate();
+            int rows =ps.executeUpdate();
+            dbMessages(rows,"added");
             ps.close();
             return true;
         } catch (SQLException ex) {
@@ -62,7 +70,8 @@ public class UsersTable {
             ps.setString(4, user.getUnitCode());
             
 
-            ps.executeUpdate();
+            int rows =ps.executeUpdate();
+            dbMessages(rows,"updated");
             ps.close();
             return true;
         } catch (SQLException ex) {
@@ -76,7 +85,8 @@ public class UsersTable {
             database.connect();
             ps = database.prepareStatement("DELETE FROM Users WHERE username=?");
             ps.setString(1, username);
-            ps.executeUpdate();
+            int rows =ps.executeUpdate();
+            dbMessages(rows,"deleted");
             ps.close();
             return true;
         } catch (SQLException ex) {
@@ -91,7 +101,8 @@ public class UsersTable {
             ps = database.prepareStatement("UPDATE Users set name=? WHERE username=?");
             ps.setString(1, name);
             ps.setString(2, username);
-            ps.executeUpdate();
+            int rows =ps.executeUpdate();
+            dbMessages(rows,"updated");
             ps.close();
             return true;
         } catch (SQLException ex) {
@@ -103,10 +114,11 @@ public class UsersTable {
     public boolean updatePassword(String username, String newPass) {
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
-            ps = database.prepareStatement("UPDATE Users set name=? WHERE username=?");
+            ps = database.prepareStatement("UPDATE Users set password=? WHERE username=?");
             ps.setString(1, newPass);
             ps.setString(2, username);
-            ps.executeUpdate();
+           int rows =ps.executeUpdate();
+            dbMessages(rows,"updated");
             ps.close();
             return true;
         } catch (SQLException ex) {
@@ -187,6 +199,7 @@ public class UsersTable {
                 user.setName(rs.getString(3));
                 user.setAdmin(rs.getInt(4));
                 user.setUnitCode(rs.getString(5));
+                array.add(user);
             }
             ps.close();
         } catch (SQLException ex) {
