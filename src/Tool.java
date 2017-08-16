@@ -60,27 +60,26 @@ public class Tool {
     
     //mysql date comes in format yyyy-mm-dd. 
     //This method makes it dd-mm-yyyy
-    public String reverseDate(String dateToReverse){
-        char[] date = dateToReverse.toCharArray();
-        String day = date[8] + date[9] + "";
-        String month = date[5] + date[6] + "";
-        String year = date[0] + date[1] + date[2] + date[3] + "";
-        
+    public String reverseDate(String date){
+        String year = date.substring(0, 4);
+        String month = date.substring(5, 7);
+        String day = date.substring(8, 10);
+
         return day + "-" + month + "-" + year;
     }
     
-    public long daysLeftForSubscription(String strDate){
-        long daysLeft = 0;
+    public int calculateDaysRemainingToDate(String strDate){
+        int daysLeft = 0;
         try {
             //Today's Date
             Date today_date = new Date();
             //Expiration Date
-            Date expiration_date=new SimpleDateFormat("dd-MM-yyyy").parse(strDate);
+            Date expiration_date= new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
             
             //Difference (Calculates in milli-seconds)
             long diff = today_date.getTime() - expiration_date.getTime();
             //Converts from milli-seconds to days
-            daysLeft = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+            daysLeft = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
             
         } catch (ParseException ex) {
             Logger.getLogger(Tool.class.getName()).log(Level.SEVERE, null, ex);

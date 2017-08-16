@@ -209,17 +209,17 @@ public class UsersTable {
     }
     
         public User getUser(String username) {
-        User user = new User();
+        User user = null;
         try {
             database.connect();
             ps = database.prepareStatement("SELECT * FROM Users WHERE username=?");
-            
             ps.setString(1, username);
             
             rs = ps.executeQuery();
             
             
             if (rs.next()){
+                user = new User();
                 user.setUsername(rs.getString(1));
                 user.setPassword("");
                 user.setName(rs.getString(3));

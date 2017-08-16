@@ -186,5 +186,26 @@ public class UnitsTable {
         } else {
             System.out.println(" NO CHANGES! ");
         }
+        
     }
+    
+    public String getExpirationDate(String unit_code) {
+        String expirationDate = null;
+        try {
+            database.connect();
+            ps = database.prepareStatement("SELECT expiration_date FROM Units WHERE unit_code=?");
+            ps.setString(1, unit_code);
+            rs = ps.executeQuery();
+            
+            if (rs.next())
+                expirationDate = rs.getString(1);
+            ps.close();
+            database.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return expirationDate;
+    }
+    
 }
