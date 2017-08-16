@@ -29,7 +29,7 @@ public class UnitsTable {
     
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM units WHERE unit_code=?");
+            ps = database.prepareStatement("SELECT * FROM Units WHERE unit_code=?");
             
             ps.setString(1, unit_code);
             rs = ps.executeQuery();
@@ -52,9 +52,9 @@ public class UnitsTable {
         try {
             database.connect();
             if (isOpen)
-                ps = database.prepareStatement("UDATE units set isOpenAuthorties=1 WHERE unit_code=?");
+                ps = database.prepareStatement("UDATE Units set isOpenAuthorities=1 WHERE unit_code=?");
             else
-                ps = database.prepareStatement("UDATE units set isOpenAuthorties=0 WHERE unit_code=?");
+                ps = database.prepareStatement("UDATE Units set isOpenAuthorities=0 WHERE unit_code=?");
             
             ps.setString(1, unit_code);
             ps.close();
@@ -72,7 +72,7 @@ public class UnitsTable {
     
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT isOpenAuthorties FROM units WHERE unit_code=?");
+            ps = database.prepareStatement("SELECT isOpenAuthorities FROM Units WHERE unit_code=?");
             
             ps.setString(1, unit_code);
             rs = ps.executeQuery();
