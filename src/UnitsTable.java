@@ -101,7 +101,7 @@ public class UnitsTable {
             ps.setString(2, unit.getName());
             ps.setString(3, unit.getContactInfo());
             ps.setInt(4, unit.getOpenAuthorties());
-            ps.setDate(5, new Date(2000, 2, 2) );
+            ps.setDate(5, new Date(2000, 2, 2) );//---------------ISSUES with date representation PLZ chang it to Varchar____________________
             ps.setInt(6, 0);
             ps.setString(7, unit.getNote());
             int rows=ps.executeUpdate();
