@@ -58,8 +58,8 @@ public class Main {
             
         }*/
         //testing UserTable---------------------------------------------------------------------------------------------
-        UsersTable usersTable= new UsersTable();
-        User user = new User("hk_2006", "123123","Ali",0,"1");
+        //UsersTable usersTable= new UsersTable();
+        //User user = new User("hk_2006", "123123","Ali",0,"1");
         //usersTable.insert(user);
         //usersTable.delete(user.getUsername());
         //usersTable.updatePassword(user.getUsername(),"000");
@@ -71,5 +71,10 @@ public class Main {
             
         }*/
         
+        //------- test UnitsTable____________________________________________________________
+        
+        Unit unit= new Unit("1","name1","", 0, "");
+        UnitsTable unitsTable= new UnitsTable();
+        unitsTable.getUnit(unit.getUnitCode());
     }
 }
