@@ -82,7 +82,6 @@ public class Tool {
         try {
             long daysLeft = 0;
             Date today_date = new Date();
-            today_date.setTime(0);
             //today_date=new SimpleDateFormat("dd-MM-yyyy").parse(today_date.toString());
             Date expiration_date=new SimpleDateFormat("dd-MM-yyyy").parse(strDate);
             
