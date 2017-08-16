@@ -5,13 +5,8 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -19,16 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author salehalmakki
- */
 public class Tool {
     Tool(){
     }
@@ -59,6 +45,9 @@ public class Tool {
         return MAC_address;
     } 
     
+    //these two methods displays form in the center of the screen
+    //they are called in the constructor of all forms excactlly this way:
+    // CenterForm(this);
     public void CenterForm(JFrame form){
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         form.setLocation(dim.width/2-form.getSize().width/2, dim.height/2-form.getSize().height/2);
@@ -69,6 +58,8 @@ public class Tool {
     }
     
     
+    //mysql date comes in format yyyy-mm-dd. 
+    //This method makes it dd-mm-yyyy
     public String reverseDate(String dateToReverse){
         char[] date = dateToReverse.toCharArray();
         String day = date[8] + date[9] + "";
@@ -79,21 +70,21 @@ public class Tool {
     }
     
     public long daysLeftForSubscription(String strDate){
+        long daysLeft = 0;
         try {
-            long daysLeft = 0;
+            //Today's Date
             Date today_date = new Date();
-            //today_date=new SimpleDateFormat("dd-MM-yyyy").parse(today_date.toString());
+            //Expiration Date
             Date expiration_date=new SimpleDateFormat("dd-MM-yyyy").parse(strDate);
             
+            //Difference (Calculates in milli-seconds)
             long diff = today_date.getTime() - expiration_date.getTime();
-            System.out.println (today_date);
-            System.out.println (expiration_date);
-            System.out.println ("Days: " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+            //Converts from milli-seconds to days
+            daysLeft = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
             
-            return daysLeft;
         } catch (ParseException ex) {
             Logger.getLogger(Tool.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return daysLeft;
     }
 }
