@@ -73,8 +73,11 @@ public class Main {
         
         //------- test UnitsTable____________________________________________________________
         
-        Unit unit= new Unit("1","name1","d1", 0, "d2");
+        Unit unit= new Unit("1","name1","d3", 0, "d4");
         UnitsTable unitsTable= new UnitsTable();
-        unitsTable.insert(unit);
+        //unitsTable.insert(unit);
+        //unitsTable.delete(unit);
+        //unitsTable.update(unit);
+        //System.out.println(unitsTable.isOpenAuthorties(unit.getUnitCode()));
     }
 }

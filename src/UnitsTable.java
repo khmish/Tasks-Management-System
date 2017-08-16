@@ -133,6 +133,22 @@ public class UnitsTable {
         }
         return false;
     }
+    public boolean delete(Unit unit)
+    {
+        try {
+            database.connect();
+            ps = database.prepareStatement("DELETE FROM Units WHERE unit_code =?");
+            ps.setString(1, unit.getUnitCode());
+            int rows=ps.executeUpdate();
+            dbMessages(rows,"deleted");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
+            ps.close();
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(UnitsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
     public void dbMessages(int rows,String type)
     {
         if (rows>0) {
