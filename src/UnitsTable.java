@@ -1,4 +1,5 @@
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -100,7 +101,7 @@ public class UnitsTable {
             ps.setString(2, unit.getName());
             ps.setString(3, unit.getContactInfo());
             ps.setInt(4, unit.getOpenAuthorties());
-            ps.setString(5, "2000-03-02");
+            ps.setDate(5, new Date(2000, 2, 2) );
             ps.setInt(6, 0);
             ps.setString(7, unit.getNote());
             int rows=ps.executeUpdate();
