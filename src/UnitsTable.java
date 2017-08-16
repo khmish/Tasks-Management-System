@@ -3,8 +3,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,67 +30,35 @@ public class UnitsTable {
         try {
             database.connect();
             ps = database.prepareStatement("SELECT * FROM Units WHERE unit_code=?");
-<<<<<<< HEAD
-            
             ps.setString(1, unit_code);
             rs = ps.executeQuery();
             
             if (rs.next())
-                unit = new Unit(rs.getString(1), rs.getString(2),rs.getString(3),rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7));
+                unit = new Unit(rs.getString(1), rs.getString(2),rs.getString(3),rs.getInt(4), 
+                        rs.getString(5), rs.getInt(6), rs.getString(7));
             ps.close();
             database.close();
-=======
-
-            ps.setString(1, unit_code);
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                unit = new Unit(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5));
-            }
-            ps.close();
-
->>>>>>> origin/master
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return unit;
     }
-<<<<<<< HEAD
     
     public boolean setOpenAuthorities(String unit_code, boolean isOpen){
-        Database database = new Database();
-        PreparedStatement ps;
-    
-        try {
-            database.connect();
-            if (isOpen)
-                ps = database.prepareStatement("UPDATE Units set isOpenAuthorities=1 WHERE unit_code=?");
-            else
-                ps = database.prepareStatement("UPDATE Units set isOpenAuthorities=0 WHERE unit_code=?");
-            
-=======
-
-    public void setOpenAuthorities(String unit_code, boolean isOpen) {
 
         try {
             database.connect();
             if (isOpen) {
-                ps = database.prepareStatement("UDATE Units set isOpenAuthorities=1 WHERE unit_code=?");
+                ps = database.prepareStatement("UPDATE Units set isOpenAuthorities=1 WHERE unit_code=?");
             } else {
-                ps = database.prepareStatement("UDATE Units set isOpenAuthorities=0 WHERE unit_code=?");
+                ps = database.prepareStatement("UPDATE Units set isOpenAuthorities=0 WHERE unit_code=?");
             }
-
->>>>>>> origin/master
             ps.setString(1, unit_code);
             ps.execute();
             ps.close();
-<<<<<<< HEAD
             database.close();
             return true;
-=======
-
->>>>>>> origin/master
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -105,24 +71,15 @@ public class UnitsTable {
 
         try {
             database.connect();
-<<<<<<< HEAD
-            ps = database.prepareStatement("SELECT isOpenAuthorties FROM Units WHERE unit_code=?");
             
-=======
             ps = database.prepareStatement("SELECT isOpenAuthorities FROM Units WHERE unit_code=?");
-
->>>>>>> origin/master
             ps.setString(1, unit_code);
             rs = ps.executeQuery();
 
             if (rs.next()) {
                 status = rs.getInt(1);
             }
-            ps.close();
-<<<<<<< HEAD
-            database.close();
-=======
->>>>>>> origin/master
+            ps.close();database.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
@@ -145,9 +102,10 @@ public class UnitsTable {
             ps.setString(2, unit.getName());
             ps.setString(3, unit.getContactInfo());
             ps.setInt(4, unit.getOpenAuthorties());
-            ps.setDate(5, new Date(2000, 2, 2) );//---------------ISSUES with date representation PLZ chang it to Varchar____________________
-            ps.setInt(6, 0);
+            ps.setString(5, unit.getExpirationDate());//---------------ISSUES with date representation PLZ chang it to Varchar____________________
+            ps.setInt(6, unit.getSubsecription());
             ps.setString(7, unit.getNote());
+            
             int rows=ps.executeUpdate();
             dbMessages(rows,"added");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
@@ -162,8 +120,7 @@ public class UnitsTable {
         PreparedStatement ps;
         ResultSet rs;
         int subscription = 0;
-    
-<<<<<<< HEAD
+
         try {
             database.connect();
             ps = database.prepareStatement("SELECT subscription FROM Units WHERE unit_code=?");
@@ -186,7 +143,7 @@ public class UnitsTable {
             return false;
     }
 
-=======
+    
     public boolean update(Unit unit){
             
         try {
@@ -230,5 +187,4 @@ public class UnitsTable {
             System.out.println(" NO CHANGES! ");
         }
     }
->>>>>>> origin/master
 }
