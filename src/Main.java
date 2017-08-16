@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String args[]) { 
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
         //Authority auth = new Authority("Ali", "Khal", "AA");
         //boolean r = new AuthoritiesTable().delete(auth);
         //System.out.println(r);
@@ -71,8 +71,5 @@ public class Main {
             
         }*/
         
-=======
-                
->>>>>>> Stashed changes
     }
 }
