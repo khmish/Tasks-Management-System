@@ -89,5 +89,55 @@ public class UnitsTable {
             return false;
         }
     }
-
+    
+    public boolean insert(Unit unit){
+        
+        
+        try {
+            database.connect();
+            ps = database.prepareStatement("INSERT INTO Units VALUES(?,?,?,?,?,?,?)");
+            ps.setString(1, unit.getUnitCode());//get new id
+            ps.setString(2, unit.getName());
+            ps.setString(3, unit.getContactInfo());
+            ps.setInt(4, unit.getOpenAuthorties());
+            ps.setString(5, "2000-03-02");
+            ps.setInt(6, 0);
+            ps.setString(7, unit.getNote());
+            int rows=ps.executeUpdate();
+            dbMessages(rows,"added");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    
+    public boolean update(Unit unit){
+            
+        try {
+            database.connect();
+            ps = database.prepareStatement("UPDATE Units SET name=?,contact_info=? ,isOpenAuthorities=?, note=? WHERE unit_code=?");
+            
+            ps.setString(1, unit.getName());
+            ps.setString(2, unit.getContactInfo());
+            ps.setInt(3, unit.getOpenAuthorties());
+            ps.setString(4, unit.getNote());
+            ps.setString(5, unit.getUnitCode());
+            int rows=ps.executeUpdate();
+            dbMessages(rows,"updated");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    public void dbMessages(int rows,String type)
+    {
+        if (rows>0) {
+            System.out.println(rows+" rows have been "+type+"!" );
+        } else {
+            System.out.println(" NO CHANGES! ");
+        }
+    }
 }
