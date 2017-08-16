@@ -5,6 +5,17 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -65,5 +76,25 @@ public class Tool {
         String year = date[0] + date[1] + date[2] + date[3] + "";
         
         return day + "-" + month + "-" + year;
+    }
+    
+    public long daysLeftForSubscription(String strDate){
+        try {
+            long daysLeft = 0;
+            Date today_date = new Date();
+            today_date.setTime(0);
+            //today_date=new SimpleDateFormat("dd-MM-yyyy").parse(today_date.toString());
+            Date expiration_date=new SimpleDateFormat("dd-MM-yyyy").parse(strDate);
+            
+            long diff = today_date.getTime() - expiration_date.getTime();
+            System.out.println (today_date);
+            System.out.println (expiration_date);
+            System.out.println ("Days: " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+            
+            return daysLeft;
+        } catch (ParseException ex) {
+            Logger.getLogger(Tool.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 }

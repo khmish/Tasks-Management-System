@@ -14,35 +14,23 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String args[]) { 
-<<<<<<< Updated upstream
-        //Authority auth = new Authority("Ali", "Khal", "AA");
-        //boolean r = new AuthoritiesTable().delete(auth);
-        //System.out.println(r);
-        //ArrayList array = new AuthoritiesTable().getAssignees("s.almakki");
-        //System.out.println(array);
-        /*
-=======
-        //Login log = new LoginsTable().getLog();
-        //boolean r = new LoginsTable().logAllSessionOut("s.almakki");
-        //System.out.println(new LoginsTable().getNumberOfDevicesRegistered(log.getUser()));
-        //ArrayList array = new AuthoritiesTable().getAssignees("s.almakki");
-        //System.out.println(array);
         
->>>>>>> Stashed changes
-        Login log = new LoginsTable().getLog();
         
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                if (log == null)
-                    new Form_Login().setVisible(true);
-                else{
-                    User user = new UsersTable().getUser(log.getUser());
-                    new Form_Tasks(user).setVisible(true);
-                }
-            }
-        });
-<<<<<<< Updated upstream
-                */
+        ///////////////////////////TESTING AREA//////////////////////////////
+
+        //Saleh's Area
+        //new UnitsTable().setOpenAuthorities("AA", false);
+        //Unit unit = new UnitsTable().getUnit("AA");
+        //System.out.println(unit);
+        //System.out.println(new UnitsTable().isSubscribedUnit("AA"));
+        //System.out.println(unit.getUnitCode() + ", " + unit.getName() + ", " + unit.getContactInfo() + ", " +unit.getOpenAuthorties() + ", " + unit.getNote() + ", " + unit.getSubsecription());
+        new Tool().daysLeftForSubscription("14-08-2017");
+        
+        
+        
+        
+        //Hassan's Area
+        
         //testing TasksTable-------------------------------------------------------------------------------------------
         /*TasksTable tasksTable= new TasksTable();
         Task task= new Task(tasksTable.getNewID()   ,"2010-01-01","assignedBy", "assignedTo", "subject", "details", "2010-02-01", 1, "1");
@@ -58,8 +46,8 @@ public class Main {
             
         }*/
         //testing UserTable---------------------------------------------------------------------------------------------
-        UsersTable usersTable= new UsersTable();
-        User user = new User("hk_2006", "123123","Ali",0,"1");
+        //UsersTable usersTable= new UsersTable();
+        //User user = new User("hk_2006", "123123","Ali",0,"1");
         //usersTable.insert(user);
         //usersTable.delete(user.getUsername());
         //usersTable.updatePassword(user.getUsername(),"000");
@@ -70,9 +58,31 @@ public class Main {
             System.out.println(arrayList.get(i).getName());
             
         }*/
-        
-=======
                 
->>>>>>> Stashed changes
+        ///////////////////////////TESTING AREA//////////////////////////////
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        //ORGINAL MAIN FUNCTION CODE
+        /*
+        Login log = new LoginsTable().getLog();
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                if (log == null)
+                    new Form_Login().setVisible(true);
+                else{
+                    User user = new UsersTable().getUser(log.getUser());
+                    new Form_Tasks(user).setVisible(true);
+                }
+            }
+        });
+        */
     }
 }
