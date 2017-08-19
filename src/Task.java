@@ -22,6 +22,10 @@ public class Task {
     int status;
     String unit_code;
     
+    
+    private String assignorName; 
+    private String assigneeName;
+    
     Task(){
         
     }
@@ -100,4 +104,17 @@ public class Task {
         return this.unit_code;
     }
     
+    public void setAssignorName(String name){
+        this.assignorName = name;
+    }
+    public String getAssignorName(){
+        return this.assignorName;
+    }
+    
+    public void setAssigneeName(String name){
+        this.assigneeName = name;
+    }
+    public String getAssigneeName(){
+        return this.assigneeName;
+    }
 }

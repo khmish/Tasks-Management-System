@@ -1,3 +1,4 @@
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 /*
@@ -13,6 +14,16 @@ import javax.swing.JOptionPane;
 public class Main {
 
     public static void main(String args[]) {  
+        /*
+        TasksTable table = new TasksTable();
+        for (int i=1; i<120; i++){
+            Task task = table.getTask(10);
+            task.setTaskID(table.getNewID());
+            table.insert(task);
+            System.out.println(i);
+        }
+        return;
+        */
         Login log = new LoginsTable().getLog();
         //System.out.println(log.getUnitCode());
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -24,8 +35,7 @@ public class Main {
                 
                 //if log found
                 else{
-                    //get unit and user
-                    User user = new UsersTable().getUser(log.getUser());
+                    //get unit to check for subscription
                     Unit unit = new UnitsTable().getUnit(log.getUnitCode());
                     
                     //calclate remaining days using unit expiration date stored 
@@ -33,12 +43,15 @@ public class Main {
                     int days_remaining = new Tool().calculateDaysRemainingToDate(unit.getExpirationDate());
                     
                     //if no remaining days, display a message
-                    if (days_remaining <= 0)
-                        JOptionPane.showMessageDialog(null, "Service is not avilable at this time!\n Please contact your system Administration for more information.");
+                    //date (SOMETIMES) not accurate because it takes today date from user's pc
+                    //subsecription is changed manually by developers
+                    if (days_remaining <= 0 || unit.getSubsecription() == 0)
+                        JOptionPane.showMessageDialog(null, "Service is not avilable at this time!\nPlease contact your system Administration for more information.");
                     
                     
                     //if remaining days>0, launch the app (Tasks Page)
                     else{
+                        User user = new UsersTable().getUser(log.getUser());
                         new Form_Tasks(user).setVisible(true);
                         
                         //This part is for admin users in the unit
@@ -51,7 +64,7 @@ public class Main {
                         
                 }
             }
-        });
+        });   
                 
     }
 }

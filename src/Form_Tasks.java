@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -17,17 +18,31 @@ public class Form_Tasks extends javax.swing.JFrame {
     private User user;
     private ArrayList receivedTasks;
     private ArrayList sentTasks;
+    private ArrayList closedTasks;
+    private ArrayList users_array;
     private TasksTable tasksTable = new TasksTable();
     private Form_UserSettings settings_form;
     
+    
     public Form_Tasks(User user) {
         initComponents();
-        new Tool().CenterForm(this);
+        Tool tool = new Tool();
+        tool.CenterForm(this);
         this.user = user;
         settings_form = new Form_UserSettings(user, this);
-        receivedTasks = tasksTable.getReceivedTasks(user.getUsername());
-        sentTasks = tasksTable.getSentTasks(user.getUsername());
+        
+        ArrayList user_tasks = new TasksTable().getUserTasks(user.getUsername());
+        //receivedTasks = tasksTable.getReceivedTasks(user.getUsername());
+        //sentTasks = tasksTable.getSentTasks(user.getUsername());
+        //closedTasks = tasksTable.getClosedTasks(user.getUsername());
+        
+        tool.filterTasks(user.getUsername(), user_tasks);
+        receivedTasks = tool.receivedTasks;
+        sentTasks = tool.sentTasks;
+        closedTasks = tool.closedTasks;
+        
         lstMenu.setSelectedIndex(0);
+        callRequestsToCloseTasks();
         //btnClose.setEnabled(false);
         //btnReturn.setEnabled(false);
     }
@@ -46,19 +61,44 @@ public class Form_Tasks extends javax.swing.JFrame {
         
         
         for(int i = 0; i < array.size(); i++){
-            Task task = (Task) array.get(0);
+            Task task = (Task) array.get(i);
             if(showAll){
-                Object[] row = { task.getTaskID(), task.getSubject(), task.getDueDate(), task.getStatus() };
+                Object[] row = { task.getTaskID(),
+                        lstMenu.getSelectedIndex() == 0? task.getAssignor():task.getAssignee(), 
+                        task.getSubject(), task.getDueDate()};
                 DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
                 model.addRow(row);
             }
             else if(task.getStatus() == 0){
-                Object[] row = { task.getTaskID(), task.getSubject(), task.getDueDate(), task.getStatus() };
+                Object[] row = { task.getTaskID(), lstMenu.getSelectedIndex() == 0? task.getAssignor():task.getAssignee(),
+                    task.getSubject(), task.getDueDate()};
                 DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
                 model.addRow(row);
             }
         }
     } 
+    
+    private void callRequestsToCloseTasks(){
+        for(int i = 0; i < closedTasks.size(); i++){
+            Task task = (Task) closedTasks.get(i);
+            String status = "";
+            
+            if(task.getStatus() == 0) status ="In progress";
+            else if(task.getStatus() == 1) status ="Completed";
+            else if(task.getStatus() == 0) status ="Closed";
+            Object[] row = { task.getTaskID(), task.getAssignee(), task.getSubject(), task.getDueDate()};
+            DefaultTableModel model = (DefaultTableModel) tblTasksToClose.getModel();
+            model.addRow(row);
+        }
+    }
+            
+    public void insertRow(Task task){
+        Object[] row = { task.getTaskID(), task.getAssignee(), task.getSubject(), task.getDueDate()};
+        DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
+        model.addRow(row);
+        sentTasks.add(task);
+    }
+    
     
     public void setMenuSelection(int value){
         lstMenu.setSelectedIndex(value);
@@ -128,14 +168,14 @@ public class Form_Tasks extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Task ID", "Subject", "Due Date", "Status"
+                "Task ID", "User", "Subject", "Due Date", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -154,10 +194,11 @@ public class Form_Tasks extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(tblTasksToClose);
         if (tblTasksToClose.getColumnModel().getColumnCount() > 0) {
-            tblTasksToClose.getColumnModel().getColumn(0).setPreferredWidth(100);
-            tblTasksToClose.getColumnModel().getColumn(1).setPreferredWidth(500);
-            tblTasksToClose.getColumnModel().getColumn(2).setPreferredWidth(200);
+            tblTasksToClose.getColumnModel().getColumn(0).setPreferredWidth(80);
+            tblTasksToClose.getColumnModel().getColumn(1).setPreferredWidth(200);
+            tblTasksToClose.getColumnModel().getColumn(2).setPreferredWidth(500);
             tblTasksToClose.getColumnModel().getColumn(3).setPreferredWidth(200);
+            tblTasksToClose.getColumnModel().getColumn(4).setPreferredWidth(200);
         }
 
         javax.swing.GroupLayout pnlTasksToCloseLayout = new javax.swing.GroupLayout(pnlTasksToClose);
@@ -195,7 +236,7 @@ public class Form_Tasks extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Task ID", "Subject", "Due Date", "Status"
+                "Task ID", "User", "Subject", "Due Date"
             }
         ) {
             Class[] types = new Class [] {
@@ -224,9 +265,9 @@ public class Form_Tasks extends javax.swing.JFrame {
             tblTasks.getColumnModel().getColumn(0).setResizable(false);
             tblTasks.getColumnModel().getColumn(0).setPreferredWidth(100);
             tblTasks.getColumnModel().getColumn(1).setResizable(false);
-            tblTasks.getColumnModel().getColumn(1).setPreferredWidth(500);
+            tblTasks.getColumnModel().getColumn(1).setPreferredWidth(200);
             tblTasks.getColumnModel().getColumn(2).setResizable(false);
-            tblTasks.getColumnModel().getColumn(2).setPreferredWidth(200);
+            tblTasks.getColumnModel().getColumn(2).setPreferredWidth(500);
             tblTasks.getColumnModel().getColumn(3).setResizable(false);
             tblTasks.getColumnModel().getColumn(3).setPreferredWidth(200);
         }
@@ -265,7 +306,9 @@ public class Form_Tasks extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblNewTask))
                     .addComponent(pnlTasks, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(102, 102, 102)))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -301,9 +344,17 @@ public class Form_Tasks extends javax.swing.JFrame {
     private void tblTasksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTasksMouseClicked
         if (evt.getClickCount() == 2){
             int row = tblTasks.getSelectedRow();
-            long task_id = (long) tblTasks.getValueAt(row, 0);
-            Task task = tasksTable.getTask(task_id);
-            new Dialog_TaskInfo(task).setVisible(true);
+
+            if (lstMenu.getSelectedIndex() == 0){
+                Task task = (Task) receivedTasks.get(row);
+                new Dialog_Task(user, task, this, 3).setVisible(true);
+            }
+                
+            else if (lstMenu.getSelectedIndex() == 1){
+                Task task = (Task) sentTasks.get(row);
+                new Dialog_Task(user, task, this, 2).setVisible(true);
+            }
+                
         }
     }//GEN-LAST:event_tblTasksMouseClicked
 
@@ -313,7 +364,7 @@ public class Form_Tasks extends javax.swing.JFrame {
             int row = tblTasksToClose.getSelectedRow();
             long task_id = (long) tblTasksToClose.getValueAt(row, 0);
             Task task = tasksTable.getTask(task_id);
-            new Dialog_TaskInfo(task).setVisible(true);
+            new Dialog_Task(user, task, this, 4).setVisible(true);
          }
          
          
@@ -328,7 +379,7 @@ public class Form_Tasks extends javax.swing.JFrame {
     }//GEN-LAST:event_tblTasksToCloseMouseClicked
 
     private void lblNewTaskMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNewTaskMouseClicked
-        new Dialog_TaskInfo(user).setVisible(true);
+        new Dialog_Task(user, new Task(), this, 1).setVisible(true);
     }//GEN-LAST:event_lblNewTaskMouseClicked
 
     
@@ -369,6 +420,7 @@ public class Form_Tasks extends javax.swing.JFrame {
         int row = tblTasksToClose.getSelectedRow();
         long task_id = (long) tblTasksToClose.getValueAt(row, 0);
         tasksTable.updateStatus(task_id, 0);
+        tblTasksToClose.remove(row);
 
     }//GEN-LAST:event_btnReturnActionPerformed
 
@@ -379,10 +431,12 @@ public class Form_Tasks extends javax.swing.JFrame {
         int row = tblTasksToClose.getSelectedRow();
         long task_id = (long) tblTasksToClose.getValueAt(row, 0);
         int status = (int) tblTasksToClose.getValueAt(row, 3);
-        if (status == -1)
-            tasksTable.updateStatus(task_id, 1);
+        if (status == 1)
+            tasksTable.updateStatus(task_id, -1);
         else if(status == -2)
-            tasksTable.updateStatus(task_id, 2);
+            tasksTable.updateStatus(task_id, -2);
+        
+        tblTasksToClose.remove(row);
     }//GEN-LAST:event_btnCloseActionPerformed
 
     /**

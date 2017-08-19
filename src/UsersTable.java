@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,13 +20,11 @@ public class UsersTable {
     private Database database = new Database();
     private ResultSet rs;   //for SELECT, using excuteQuery()
     private PreparedStatement ps; ////for SELECT, using excute()
-    // the construct is providing connection to DB
+
     public UsersTable() {
-        //user ,pass, url
-        
-        if (database.connect()) {
-            System.out.println("connected!");
-        }
+        //if (database.connect()) {
+        //    System.out.println("connected!");
+        //}
 
     }
     public void dbMessages(int rows,String type)
@@ -37,7 +36,7 @@ public class UsersTable {
         }
     }
     public boolean insert(User user) {
-        
+        boolean result = false;
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
             ps = database.prepareStatement("INSERT INTO Users VALUES(?,?,?,?,?)");
@@ -47,19 +46,19 @@ public class UsersTable {
             ps.setInt(4, user.getAdmin());
             ps.setString(5, user.getUnitCode());
             
-
             int rows =ps.executeUpdate();
             dbMessages(rows,"added");
             ps.close();
-            return true;
+            result = true;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        database.close();
+        return result;
     }
 
         public boolean update(User user) {
-        
+        boolean result = false;
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
             ps = database.prepareStatement("UPDATE Users set name=?, password=?, isAdmin=?, unit_code=? WHERE username=?");
@@ -73,14 +72,16 @@ public class UsersTable {
             int rows =ps.executeUpdate();
             dbMessages(rows,"updated");
             ps.close();
-            return true;
+            result = true;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        database.close();
+        return result;
     }
         
     public boolean delete(String username) {
+        boolean result = false;
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
             ps = database.prepareStatement("DELETE FROM Users WHERE username=?");
@@ -88,14 +89,16 @@ public class UsersTable {
             int rows =ps.executeUpdate();
             dbMessages(rows,"deleted");
             ps.close();
-            return true;
+            result = true;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        database.close();
+        return result;
     }
 
     public boolean updateName(String username, String name) {
+        boolean result = false;
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
             ps = database.prepareStatement("UPDATE Users set name=? WHERE username=?");
@@ -104,14 +107,16 @@ public class UsersTable {
             int rows =ps.executeUpdate();
             dbMessages(rows,"updated");
             ps.close();
-            return true;
+            result = true;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        database.close();
+        return result;
     }
     
     public boolean updatePassword(String username, String newPass) {
+        boolean result = false;
         try {//an example of update DB-------change the update statement to delete of insert
             database.connect();
             ps = database.prepareStatement("UPDATE Users set password=? WHERE username=?");
@@ -120,11 +125,12 @@ public class UsersTable {
            int rows =ps.executeUpdate();
             dbMessages(rows,"updated");
             ps.close();
-            return true;
+            result = true;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        database.close();
+        return result;
     }
 
     public boolean login(String username, String pass) {
@@ -139,23 +145,25 @@ public class UsersTable {
             rs = ps.executeQuery();
             
             
-            while (rs.next()){
+            if (rs.next()){
                 login = true;
             }
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database.close();
         return login;
     }
     
     
     public ArrayList search(String criteria, String unit_code) {
+        criteria = "%" + criteria + "%";
+        
         ArrayList array = new ArrayList();
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM Users WHERE username LIKE %?% OR name LIKE %?%"
-                    + "AND unit_id=?");
+            ps = database.prepareStatement("SELECT * FROM Users WHERE (username LIKE ? OR name LIKE ?) AND unit_code=?");
             
             ps.setString(1, criteria);
             ps.setString(2, criteria);
@@ -165,6 +173,7 @@ public class UsersTable {
             
             
             while (rs.next()){
+                //JOptionPane.showMessageDialog(null, "Found");
                 User user = new User();
                 
                 user.setUsername(rs.getString(1));
@@ -172,11 +181,13 @@ public class UsersTable {
                 user.setName(rs.getString(3));
                 user.setAdmin(rs.getInt(4));
                 user.setUnitCode(rs.getString(5));
+                array.add(user);
             }
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database.close();
         return array;
     }
 
@@ -205,10 +216,12 @@ public class UsersTable {
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database.close();
         return array;
     }
+
     
-        public User getUser(String username) {
+    public User getUser(String username) {
         User user = null;
         try {
             database.connect();
@@ -227,13 +240,39 @@ public class UsersTable {
                 user.setUnitCode(rs.getString(5));
             }
             ps.close();
+            database.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database.close();
         return user;
     }
-        
+    
+    public String getName(String username) {
+        String name = null;
+        try {
+            database.connect();
+            ps = database.prepareStatement("SELECT name FROM Users WHERE username=?");
+            ps.setString(1, username);
+            
+            rs = ps.executeQuery();
+            
+            
+            if (rs.next()){
+                name = rs.getString(1);
+            }
+            ps.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        database.close();
+        return name;
+    }
+    
+    
     public boolean isRegistered(String username) {
+        boolean result = false;
         try {
             database.connect();
             ps = database.prepareStatement("SELECT username FROM Users WHERE username=?");
@@ -244,13 +283,15 @@ public class UsersTable {
             
             
             if (rs.next()){
-                return true;
+                result = true;
             }
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        database.close();
+        return result;
     }
 
 }
+
