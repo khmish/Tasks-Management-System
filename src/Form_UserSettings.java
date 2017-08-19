@@ -1,4 +1,5 @@
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -22,24 +23,18 @@ public class Form_UserSettings extends javax.swing.JFrame {
     
     public Form_UserSettings(User user, Form_Tasks tasksForm) {
         initComponents();
-        this.tasksForm = tasksForm;
-        setup(user);
-    }
-    public Form_UserSettings(User user, int access_type) {
-        initComponents();
-        setup(user);
-    }
-    
-    private void setup(User user){
         new Tool().CenterForm(this);
         this.user = user;
-        
+        this.tasksForm = tasksForm;
+        setup();
+    }
+    
+    private void setup(){
         txtName.setText(user.getName());
         txtUser.setText(user.getUsername());
             
         txtName.setEditable(false);
         txtUser.setEditable(false);
-        chbSetAdmin.setVisible(false);
         txtOldPass.setEditable(true);
         txtPass1.setEditable(true);
         txtPass2.setEditable(true);
@@ -50,15 +45,19 @@ public class Form_UserSettings extends javax.swing.JFrame {
         else lblAdminSettings.setVisible(false);
         
         LoginsTable logsTable = new LoginsTable();
-        int logs = logsTable.getNumberOfDevicesRegistered(user.getUsername()) - 1;
+        int logs = logsTable.getNumberOfDevicesRegistered(user.getUsername());
+        
+        //current device is counted
         if (logs == 1){
-            lblLogsInfo.setText("There are no other devices connected to your account");
+            lblLogsInfo.setText("There is no other devices connected to your account");
             lblLogoutUser.setEnabled(false);
         }
         else if(logs == 2)
-            lblLogsInfo.setText("There is another device connected to your account");
-        else
+            lblLogsInfo.setText("There is 1 other device connected to your account");
+        else if(logs > 2)
             lblLogsInfo.setText("There are " + logs + " other devices connected to your account");
+        else //this occers when -1 is returnend
+            lblLogsInfo.setText("Number of devices connected: (Information Not Available)");
     }
 
     /**
@@ -85,7 +84,6 @@ public class Form_UserSettings extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         lblErrorMessage = new javax.swing.JLabel();
-        chbSetAdmin = new javax.swing.JCheckBox();
         lblLogsInfo = new javax.swing.JLabel();
         lblLogoutDevice = new javax.swing.JLabel();
         lblLogoutUser = new javax.swing.JLabel();
@@ -131,9 +129,6 @@ public class Form_UserSettings extends javax.swing.JFrame {
 
         lblErrorMessage.setForeground(new java.awt.Color(255, 0, 0));
         lblErrorMessage.setText("Error Message");
-
-        chbSetAdmin.setForeground(new java.awt.Color(0, 0, 255));
-        chbSetAdmin.setText("Set as Admin");
 
         lblLogsInfo.setText("logs info");
 
@@ -187,15 +182,12 @@ public class Form_UserSettings extends javax.swing.JFrame {
                                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(txtUser, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtOldPass, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnUpdate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
-                                            .addComponent(txtPass1, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtPass2, javax.swing.GroupLayout.Alignment.LEADING))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(chbSetAdmin))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtUser, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtOldPass, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnUpdate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                                        .addComponent(txtPass1, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtPass2, javax.swing.GroupLayout.Alignment.LEADING))
                                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(lblErrorMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblLogoutDevice)
@@ -222,8 +214,7 @@ public class Form_UserSettings extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(chbSetAdmin))
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtOldPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -259,49 +250,64 @@ public class Form_UserSettings extends javax.swing.JFrame {
     }//GEN-LAST:event_lstMenuValueChanged
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        //System.out.println(txtPass1.getPassword() +" --- "+txtPass2.getPassword());
-        //System.out.println(txtPass1.getPassword().toString()+" --- "+txtPass2.getText());
-        this.validateInputs();
-        
-        
-        lblErrorMessage.setVisible(true);
+        if(isValidInputs()){
+            lblErrorMessage.setVisible(false);
+            JOptionPane.showMessageDialog(null, "Changes have been updated successfully!");
+            this.clearPasswords();
+        }
+        else
+            lblErrorMessage.setVisible(true);
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void lblLogoutDeviceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutDeviceMouseClicked
-        new LoginsTable().logout();
+        boolean loggedOut = new LoginsTable().logout();
+        if (loggedOut){
+            JOptionPane.showMessageDialog(null, "Your account has been logged out from this device!");
+            System.exit(0);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Error occuerd, could not log you out. Please check \nyour internet connection");
+        }
+        
     }//GEN-LAST:event_lblLogoutDeviceMouseClicked
 
     private void lblLogoutUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutUserMouseClicked
-        new LoginsTable().logAllSessionOut(null);
+        boolean loggedOut = new LoginsTable().logAllSessionOut(user.getUsername());
+        if (loggedOut){
+            lblLogoutUser.setEnabled(false);
+            JOptionPane.showMessageDialog(null, "Your account has been logged out from the other devices");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Error occuerd, could not log you out from the other devices.\nPlease check your internet connection");
+        }
     }//GEN-LAST:event_lblLogoutUserMouseClicked
 
     private void lblAdminSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblAdminSettingsMouseClicked
-        Dialog_AdminSettings form = new Dialog_AdminSettings(user);
+        JDialog form = new Dialog_AdminSettings(user);
         form.setVisible(true);
     }//GEN-LAST:event_lblAdminSettingsMouseClicked
 
  
-    private void validateInputs(){
+    private boolean isValidInputs(){
         if (txtName.getText().length() < 1)
             lblErrorMessage.setText("Name field cannot left blank");
         else if (txtUser.getText().length() < 1)
             lblErrorMessage.setText("Error with username");
         else if(txtPass1.getText().length() < 4)
             lblErrorMessage.setText("Password must be no less than 4 characters");
-        else if (txtOldPass.getText().equals(user.getPassword()))
+        else if (!txtOldPass.getText().equals(user.getPassword()))
             lblErrorMessage.setText("Incorrect password");
-        else if(!txtPass1.getText().equals(txtPass2.getPassword()))
+        else if(!txtPass1.getText().equals(txtPass2.getText()))
             lblErrorMessage.setText("Passwords does not match");
         else{
             
             boolean updated = new UsersTable().updatePassword(user.getUsername(), txtPass1.getText());
-            if(updated){
-                JOptionPane.showMessageDialog(null, "Changes have been updated successfully!");
-                this.clearPasswords();
-            }
+            if(updated)
+                return true;
             else
                 lblErrorMessage.setText("Sorry, something went wrong while saving your changes!");
         }
+        return false;
     }
     
     private void clearPasswords(){
@@ -354,7 +360,6 @@ public class Form_UserSettings extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JCheckBox chbSetAdmin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

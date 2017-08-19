@@ -19,7 +19,7 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
     String unit_code;
     
     public Dialog_AdminSettings(User user){
-        super(new java.awt.Frame(), false);
+        super(new java.awt.Frame(), true);
         initComponents();
         
         new Tool().CenterForm(this);

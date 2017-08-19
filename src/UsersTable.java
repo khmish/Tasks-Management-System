@@ -234,7 +234,7 @@ public class UsersTable {
             if (rs.next()){
                 user = new User();
                 user.setUsername(rs.getString(1));
-                user.setPassword("");
+                user.setPassword(rs.getString(2));
                 user.setName(rs.getString(3));
                 user.setAdmin(rs.getInt(4));
                 user.setUnitCode(rs.getString(5));
