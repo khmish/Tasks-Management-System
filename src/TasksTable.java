@@ -38,7 +38,7 @@ public class TasksTable {
     }
     public boolean insert(Task task){
         
-        
+        int rows = 0;
         try {
             //database.connect();
             ps = database.prepareStatement("INSERT INTO Tasks VALUES(?,?,?,?,?,?,?,?,?,?,?)");
@@ -54,19 +54,20 @@ public class TasksTable {
             ps.setString(10, task.getAssignorName());
             ps.setString(11, task.getAssigneeName());
             
-            int rows=ps.executeUpdate();
-            //dbMessages(rows,"inserted");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
+            rows = ps.executeUpdate();
+            dbMessages(rows,"inserted");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
-            
+            database.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        if(rows == 1) return true;
+        else return false;
     }
     
     
     public boolean update(Task task){
-            
+            int rows = 0;
         try {
             database.connect();
             ps = database.prepareStatement("UPDATE Tasks SET created_date=?, assignor=?, assignee=?, subject=?,"
@@ -84,17 +85,19 @@ public class TasksTable {
             ps.setString(10, task.getAssignorName());
             ps.setString(11, task.getAssigneeName());
 
-            int rows=ps.executeUpdate();
+            rows=ps.executeUpdate();
             dbMessages(rows,"updated");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
+            database.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        if(rows == 1) return true;
+        else return false;
     }
     
     public boolean updateStatus(long task_id, int status){
-            
+          int rows = 0;  
         try {
             database.connect();
             ps = database.prepareStatement("UPDATE Tasks SET status=? WHERE task_id=?");
@@ -102,29 +105,33 @@ public class TasksTable {
             ps.setInt(1, status);
             ps.setLong(2, task_id);
 
-            int rows=ps.executeUpdate();
+            rows=ps.executeUpdate();
             dbMessages(rows,"updated");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
+            database.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        if(rows == 1) return true;
+        else return false;
     }
     
     public boolean delete(long task_id){
-            
+        int rows = 0;
         try {
             database.connect();
             ps = database.prepareStatement("DELETE FROM Tasks WHERE task_id=?");
             ps.setLong(1, task_id);
 
-            int rows=ps.executeUpdate();
+            rows=ps.executeUpdate();
             dbMessages(rows,"deleted");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
+            database.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        if(rows == 1) return true;
+        else return false;
     }
         
     public ArrayList Search(String unit_code, String criteria){
@@ -281,7 +288,7 @@ public class TasksTable {
             
         try {
             database.connect();
-            ps = database.prepareStatement("SELECT * FROM Tasks WHERE assignor=? OR assignee=?");
+            ps = database.prepareStatement("SELECT * FROM Tasks WHERE assignor=? OR assignee=? ORDER BY task_id");
             ps.setString(1, username);
             ps.setString(2, username);
             rs = ps.executeQuery();

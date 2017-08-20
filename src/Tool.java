@@ -129,15 +129,15 @@ public class Tool {
         sentTasks = new ArrayList();
         closedTasks = new ArrayList();
         
-        ArrayList array = new ArrayList();
         for (int i=0; i<tasks.size(); i++){
             Task t = (Task) tasks.get(i);
             if(t.getAssignee().equals(username)){
-                receivedTasks.add(tasks.get(i));
-                tasks.remove(i);
+                receivedTasks.add(t);
+                tasks.remove(i--);
             }
-            else if(t.getAssignee().equals(username) && t.getStatus() > 0){
-                closedTasks.add(tasks.get(i));
+            else if(t.getAssignor().equals(username) && t.getStatus() > 0){
+                closedTasks.add(t);
+                tasks.remove(i--);
             }
         }
         sentTasks=tasks;

@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -31,11 +32,11 @@ public class Form_Tasks extends javax.swing.JFrame {
         this.user = user;
         settings_form = new Form_UserSettings(user, this);
         
-        ArrayList user_tasks = new TasksTable().getUserTasks(user.getUsername());
         //receivedTasks = tasksTable.getReceivedTasks(user.getUsername());
         //sentTasks = tasksTable.getSentTasks(user.getUsername());
         //closedTasks = tasksTable.getClosedTasks(user.getUsername());
         
+        ArrayList user_tasks = new TasksTable().getUserTasks(user.getUsername());
         tool.filterTasks(user.getUsername(), user_tasks);
         receivedTasks = tool.receivedTasks;
         sentTasks = tool.sentTasks;
@@ -43,6 +44,8 @@ public class Form_Tasks extends javax.swing.JFrame {
         
         lstMenu.setSelectedIndex(0);
         callRequestsToCloseTasks();
+        lblLastUpdated.setText("Last updated: " + new Date().toString());
+        //updateClosedTaskTable();
         //btnClose.setEnabled(false);
         //btnReturn.setEnabled(false);
     }
@@ -59,22 +62,28 @@ public class Form_Tasks extends javax.swing.JFrame {
         
         boolean showAll = chkShowCompleted.isSelected();
         
-        
         for(int i = 0; i < array.size(); i++){
             Task task = (Task) array.get(i);
-            if(showAll){
+            if(showAll || task.getStatus() == 0){
                 Object[] row = { task.getTaskID(),
                         lstMenu.getSelectedIndex() == 0? task.getAssignor():task.getAssignee(), 
                         task.getSubject(), task.getDueDate()};
-                DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
-                model.addRow(row);
+                dm.addRow(row);
             }
-            else if(task.getStatus() == 0){
-                Object[] row = { task.getTaskID(), lstMenu.getSelectedIndex() == 0? task.getAssignor():task.getAssignee(),
-                    task.getSubject(), task.getDueDate()};
-                DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
-                model.addRow(row);
-            }
+        }
+    } 
+    
+    private void updateClosedTaskTable(){
+        
+        DefaultTableModel dm = (DefaultTableModel)tblTasksToClose.getModel();
+        dm.getDataVector().removeAllElements();
+        dm.fireTableDataChanged();
+
+        for(int i = 0; i < closedTasks.size(); i++){
+            Task task = (Task) closedTasks.get(i);
+            Object[] row = { task.getTaskID(), task.getAssignee(), task.getSubject(), 
+                task.getDueDate(), task.getStatus()==1?"Completed":"Closed"};
+                dm.addRow(row);
         }
     } 
     
@@ -92,12 +101,7 @@ public class Form_Tasks extends javax.swing.JFrame {
         }
     }
             
-    public void insertRow(Task task){
-        Object[] row = { task.getTaskID(), task.getAssignee(), task.getSubject(), task.getDueDate()};
-        DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
-        model.addRow(row);
-        sentTasks.add(task);
-    }
+
     
     
     public void setMenuSelection(int value){
@@ -126,6 +130,8 @@ public class Form_Tasks extends javax.swing.JFrame {
         pnlTasks = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblTasks = new javax.swing.JTable();
+        lblRefresh = new javax.swing.JLabel();
+        lblLastUpdated = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -287,6 +293,18 @@ public class Form_Tasks extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        lblRefresh.setForeground(new java.awt.Color(150, 0, 0));
+        lblRefresh.setText("Refresh");
+        lblRefresh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblRefresh.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblRefreshMouseClicked(evt);
+            }
+        });
+
+        lblLastUpdated.setForeground(new java.awt.Color(0, 110, 0));
+        lblLastUpdated.setText("Last Updated");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -294,21 +312,26 @@ public class Form_Tasks extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTasksToClose)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnClose)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(pnlTasksToClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(chkShowCompleted)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblNewTask))
-                    .addComponent(pnlTasks, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(102, 102, 102)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(lblLastUpdated)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblRefresh))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(btnClose)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(pnlTasksToClose, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(chkShowCompleted)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblNewTask))
+                        .addComponent(pnlTasks, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(225, 225, 225))))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -323,7 +346,7 @@ public class Form_Tasks extends javax.swing.JFrame {
                     .addComponent(lblNewTask))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlTasks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(lblTasksToClose, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlTasksToClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -331,7 +354,11 @@ public class Form_Tasks extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnClose)
                     .addComponent(btnReturn))
-                .addGap(33, 33, 33))
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblRefresh)
+                    .addComponent(lblLastUpdated))
+                .addGap(18, 18, 18))
         );
 
         pack();
@@ -354,10 +381,29 @@ public class Form_Tasks extends javax.swing.JFrame {
                 Task task = (Task) sentTasks.get(row);
                 new Dialog_Task(user, task, this, 2).setVisible(true);
             }
+            else{
+                return;
+            }
+               
+            //if(needsUpdateTasksTable){
+            //    updateTable();
+            //    needsUpdateTasksTable=false;
+            //}
                 
         }
     }//GEN-LAST:event_tblTasksMouseClicked
-
+    
+    public void insertRow(Task task){
+        Object[] row = { task.getTaskID(), task.getAssignee(), task.getSubject(), task.getDueDate()};
+        DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
+        model.addRow(row);
+        this.sentTasks.add(task);
+    }
+        
+    private boolean needsUpdateTasksTable=false;
+    public void notifyNeedsUpdateTasksTable(){
+        needsUpdateTasksTable = true;
+    }
     
     private void tblTasksToCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTasksToCloseMouseClicked
          if (evt.getClickCount() == 2){
@@ -439,6 +485,15 @@ public class Form_Tasks extends javax.swing.JFrame {
         tblTasksToClose.remove(row);
     }//GEN-LAST:event_btnCloseActionPerformed
 
+    private void lblRefreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefreshMouseClicked
+        receivedTasks = tasksTable.getReceivedTasks(user.getUsername());
+        //sentTasks is already up to date
+        closedTasks = tasksTable.getClosedTasks(user.getUsername());
+        updateTable();
+        updateClosedTaskTable();
+        lblLastUpdated.setText("Last updated: " + new Date().toString());
+    }//GEN-LAST:event_lblRefreshMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -470,9 +525,7 @@ public class Form_Tasks extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                User u = new User("assignedTo", "", "Saleh Almakki", 1, "AA");
                 
-                new Form_Tasks(u).setVisible(true);
             }
         });
     }
@@ -484,7 +537,9 @@ public class Form_Tasks extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lblLastUpdated;
     private javax.swing.JLabel lblNewTask;
+    private javax.swing.JLabel lblRefresh;
     private javax.swing.JLabel lblTasksToClose;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JList lstMenu;

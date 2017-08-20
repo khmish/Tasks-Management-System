@@ -21,7 +21,7 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
     Dialog_AdminSettings adminSettings;
     
     public Dialog_UserUpdate(User user, Dialog_AdminSettings dialog) {
-        super(new java.awt.Frame(), false);
+        super(new java.awt.Frame(), true);
         initComponents();
         new Tool().CenterForm(this);
         this.adminSettings = dialog;
@@ -29,13 +29,7 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
         txtUsername.setText(user.getUsername());
         txtUsername.setEditable(false);
         txtName.setText(user.getName());
-        btnUpdateName.setEnabled(false);
-        btnUpdatePassword.setEnabled(false);
-    }
-    
-    public Dialog_UserUpdate(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
+        lblConfirmationMessage.setText("");
     }
 
     /**
@@ -81,6 +75,8 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
 
         jLabel2.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         jLabel2.setText("Username");
+
+        txtUsername.setEnabled(false);
 
         jLabel3.setText("Password");
 
@@ -165,7 +161,13 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
     }//GEN-LAST:event_btnUpdateNameMouseClicked
 
     private void btnUpdateNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateNameActionPerformed
-        lblConfirmationMessage.setText("");
+        if(txtName.getText().length() == 0){
+            lblConfirmationMessage.setForeground(java.awt.Color.red);
+            lblConfirmationMessage.setText("Name Field can not left blank");
+            return;
+        }
+        
+        
         btnUpdateName.setText("Please Wait...");
         
         boolean updated = new UsersTable().updateName(txtUsername.getText(), txtName.getText());
@@ -186,9 +188,14 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
     }//GEN-LAST:event_btnUpdatePasswordMouseClicked
 
     private void btnUpdatePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdatePasswordActionPerformed
-        lblConfirmationMessage.setText("");
-        btnUpdatePassword.setText("Please Wait...");
+        if(txtPassword.getText().length() < 3){
+            lblConfirmationMessage.setForeground(java.awt.Color.red);
+            lblConfirmationMessage.setText("Password must be no less than 4 characters");
+            return;
+        }
         
+        btnUpdatePassword.setText("Please Wait...");
+
         boolean updated = new UsersTable().updatePassword(txtUsername.getText(), txtPassword.getText());
         if (updated){
             lblConfirmationMessage.setForeground(new java.awt.Color(0, 150, 0));
@@ -246,7 +253,7 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Dialog_UserUpdate dialog = new Dialog_UserUpdate(new javax.swing.JFrame(), true);
+                Dialog_UserUpdate dialog = new Dialog_UserUpdate(null, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

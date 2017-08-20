@@ -29,20 +29,19 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
         lblDelete.setEnabled(false);
         lblLoadStatus.setText("");
         lblAddUserMes.setVisible(false);
-        
+        updateTable();
 
-    }
-    public Dialog_AdminSettings(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
     }
 
     private void updateTable(){
+        DefaultTableModel model = (DefaultTableModel) tblUsers.getModel();
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        
         usersList = usersTable.getAllUser(unit_code);
         for(int i = 0; i < usersList.size(); i++){
             User user = (User) usersList.get(i);
             Object[] row = {user.getUsername(), user.getName()};
-            DefaultTableModel model = (DefaultTableModel) tblUsers.getModel();
             model.addRow(row);
         }
     }
@@ -217,7 +216,6 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
             }
         });
 
-        txtSearch.setText("Search");
         txtSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSearchActionPerformed(evt);
@@ -362,7 +360,10 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
     }//GEN-LAST:event_btnAddUser1ActionPerformed
 
     private void tblUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsersMouseClicked
-        if (tblUsers.getSelectedRowCount() == 1){
+        if (tblUsers.getSelectedRowCount() == 1 && evt.getClickCount() == 2){
+            OpenUserUpdateForm();
+        }
+        else if (tblUsers.getSelectedRowCount() == 1){
             lblEdit.setEnabled(true);
             lblDelete.setEnabled(true);
         }
@@ -370,8 +371,6 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
             lblEdit.setEnabled(false);
             lblDelete.setEnabled(false);
         }
-            
-        
     }//GEN-LAST:event_tblUsersMouseClicked
 
     private void btnAddUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddUserMouseClicked
@@ -385,18 +384,21 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
     private void lblEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEditMouseClicked
         
         if (tblUsers.getSelectedRowCount() == 1){
-            int row = tblUsers.getSelectedRow();
-            String username = (String) tblUsers.getValueAt(row, 0);
-            User user = new UsersTable().getUser(username);
-            new Dialog_UserUpdate(user, this).setVisible(true);
-            if (needUpdate){
-                lblLoadStatus.setText("Refreshing table... (Please wait)");
-                updateTable();
-                needUpdate = false;
-            }
+            OpenUserUpdateForm();
         }
     }//GEN-LAST:event_lblEditMouseClicked
 
+    private void OpenUserUpdateForm(){
+        int row = tblUsers.getSelectedRow();
+        String username = (String) tblUsers.getValueAt(row, 0);
+        User user = new UsersTable().getUser(username);
+        new Dialog_UserUpdate(user, this).setVisible(true);
+        if (needUpdate){
+            lblLoadStatus.setText("Refreshing table... (Please wait)");
+            updateTable();
+            needUpdate = false;
+        }
+    }
     private void lblDeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblDeleteMouseClicked
         
         if (tblUsers.getSelectedRowCount() == 1){
@@ -458,11 +460,14 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
         if(evt.getKeyCode() != 10)
             return;
         
+        DefaultTableModel model = (DefaultTableModel) tblUsers.getModel();
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        
         ArrayList results = usersTable.search(txtSearch.getText(), this.unit_code);
         for(int i = 0; i < results.size(); i++){
             User user = (User) results.get(i);
             Object[] row = {user.getUsername(), user.getName()};
-            DefaultTableModel model = (DefaultTableModel) tblUsers.getModel();
             model.addRow(row);
         }
         
@@ -503,7 +508,7 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Dialog_AdminSettings dialog = new Dialog_AdminSettings(new javax.swing.JFrame(), true);
+                Dialog_AdminSettings dialog = new Dialog_AdminSettings(null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
