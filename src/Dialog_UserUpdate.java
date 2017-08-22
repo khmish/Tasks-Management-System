@@ -60,6 +60,11 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
         });
+        txtName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtNameKeyPressed(evt);
+            }
+        });
 
         btnUpdateName.setText("Update Name");
         btnUpdateName.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -85,6 +90,11 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
                 txtPasswordInputMethodTextChanged(evt);
             }
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
+        txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPasswordKeyPressed(evt);
             }
         });
 
@@ -161,6 +171,10 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
     }//GEN-LAST:event_btnUpdateNameMouseClicked
 
     private void btnUpdateNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateNameActionPerformed
+        updateName();
+    }//GEN-LAST:event_btnUpdateNameActionPerformed
+    
+    private void updateName(){
         if(txtName.getText().length() == 0){
             lblConfirmationMessage.setForeground(java.awt.Color.red);
             lblConfirmationMessage.setText("Name Field can not left blank");
@@ -180,14 +194,16 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
             lblConfirmationMessage.setForeground(java.awt.Color.red);
             lblConfirmationMessage.setText("Sorry, something went wrong, please try again later");
         }
-            
-    }//GEN-LAST:event_btnUpdateNameActionPerformed
-
+    }
     private void btnUpdatePasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdatePasswordMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_btnUpdatePasswordMouseClicked
 
     private void btnUpdatePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdatePasswordActionPerformed
+        updatePassword();
+    }//GEN-LAST:event_btnUpdatePasswordActionPerformed
+
+    private void updatePassword(){
         if(txtPassword.getText().length() < 3){
             lblConfirmationMessage.setForeground(java.awt.Color.red);
             lblConfirmationMessage.setText("Password must be no less than 4 characters");
@@ -206,8 +222,8 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
             lblConfirmationMessage.setForeground(java.awt.Color.red);
             lblConfirmationMessage.setText("Sorry, something went wrong, please try again later");
         }
-    }//GEN-LAST:event_btnUpdatePasswordActionPerformed
-
+    }
+    
     private void txtNameInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtNameInputMethodTextChanged
         if(txtName.getText().length() > 0)
             btnUpdateName.setEnabled(true);
@@ -221,6 +237,16 @@ public class Dialog_UserUpdate extends javax.swing.JDialog {
         else
             btnUpdatePassword.setEnabled(false);
     }//GEN-LAST:event_txtPasswordInputMethodTextChanged
+
+    private void txtNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyPressed
+        if(evt.getKeyCode() == 10)
+            updateName();
+    }//GEN-LAST:event_txtNameKeyPressed
+
+    private void txtPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPasswordKeyPressed
+        if(evt.getKeyCode() == 10)
+            updatePassword();
+    }//GEN-LAST:event_txtPasswordKeyPressed
 
     /**
      * @param args the command line arguments

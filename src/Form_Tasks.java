@@ -161,7 +161,7 @@ public class Form_Tasks extends javax.swing.JFrame {
         lblTasksToClose.setText("Requests to close");
 
         lblNewTask.setForeground(new java.awt.Color(0, 0, 255));
-        lblNewTask.setText("New Task");
+        lblNewTask.setText("Send Task");
         lblNewTask.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblNewTask.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -324,14 +324,12 @@ public class Form_Tasks extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(pnlTasksToClose, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(chkShowCompleted)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblNewTask))
+                        .addComponent(chkShowCompleted, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(pnlTasks, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGap(225, 225, 225))))
+                            .addGap(212, 212, 212)
+                            .addComponent(lblNewTask))))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -339,11 +337,11 @@ public class Form_Tasks extends javax.swing.JFrame {
             .addComponent(jScrollPane2)
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chkShowCompleted)
+                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNewTask))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkShowCompleted)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlTasks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
@@ -435,7 +433,6 @@ public class Form_Tasks extends javax.swing.JFrame {
         if(lstMenu.getSelectedIndex()==0){
             //tblTasks.setSize(531, 20);
             lblTitle.setText("My Tasks");
-            lblNewTask.hide();
             pnlTasksToClose.hide();
             lblTasksToClose.hide();
             btnClose.hide();
@@ -444,7 +441,6 @@ public class Form_Tasks extends javax.swing.JFrame {
         }
         else if(lstMenu.getSelectedIndex()==1){
             lblTitle.setText("Sent Tasks");
-            lblNewTask.show();
             pnlTasksToClose.show();
             lblTasksToClose.show();
             btnClose.show();

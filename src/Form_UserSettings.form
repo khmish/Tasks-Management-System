@@ -180,6 +180,9 @@
       </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtOldPass">
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtOldPassKeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtPass1">
       <Properties>
@@ -187,6 +190,9 @@
           <Color blue="c" green="a3" red="0" type="rgb"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPass1KeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtPass2">
       <Properties>
@@ -194,6 +200,9 @@
           <Color blue="c" green="a3" red="0" type="rgb"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPass2KeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>

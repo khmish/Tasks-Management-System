@@ -37,16 +37,16 @@ public class UnitsTable {
                 unit = new Unit(rs.getString(1), rs.getString(2),rs.getString(3),rs.getInt(4), 
                         rs.getString(5), rs.getInt(6), rs.getString(7));
             ps.close();
-            database.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        database.close();
         return unit;
     }
     
     public boolean setOpenAuthorities(String unit_code, boolean isOpen){
-
+        boolean result = false;
         try {
             database.connect();
             if (isOpen) {
@@ -57,11 +57,12 @@ public class UnitsTable {
             ps.setString(1, unit_code);
             ps.execute();
             ps.close();
-            database.close();
-            return true;
+            
+            result = true;
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database.close();
         return false;
     }
 
@@ -79,12 +80,12 @@ public class UnitsTable {
             if (rs.next()) {
                 status = rs.getInt(1);
             }
-            ps.close();database.close();
+            ps.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        database.close();
         if (status == 1) {
             return true;
         } else {
@@ -112,13 +113,11 @@ public class UnitsTable {
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database.close();
         return false;
     }
     
     public boolean isSubscribedUnit(String unit_code){
-        Database database = new Database();
-        PreparedStatement ps;
-        ResultSet rs;
         int subscription = 0;
 
         try {
@@ -132,11 +131,10 @@ public class UnitsTable {
                 subscription = rs.getInt(1);
             
             ps.close();
-            database.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        database.close();
         if (subscription == 1)
             return true;
         else
@@ -145,7 +143,7 @@ public class UnitsTable {
 
     
     public boolean update(Unit unit){
-            
+        int rows = 0;    
         try {
             database.connect();
             ps = database.prepareStatement("UPDATE Units SET name=?,contact_info=? ,isOpenAuthorities=?, note=? WHERE unit_code=?");
@@ -155,21 +153,24 @@ public class UnitsTable {
             ps.setInt(3, unit.getOpenAuthorties());
             ps.setString(4, unit.getNote());
             ps.setString(5, unit.getUnitCode());
-            int rows=ps.executeUpdate();
+            rows=ps.executeUpdate();
             dbMessages(rows,"updated");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        database.close();
+        if (rows==1) return true;
+        else return false;
     }
     public boolean delete(Unit unit)
     {
+        int rows = 0;
         try {
             database.connect();
             ps = database.prepareStatement("DELETE FROM Units WHERE unit_code =?");
             ps.setString(1, unit.getUnitCode());
-            int rows=ps.executeUpdate();
+            rows=ps.executeUpdate();
             dbMessages(rows,"deleted");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
             
@@ -177,7 +178,9 @@ public class UnitsTable {
         } catch (SQLException ex) {
             Logger.getLogger(UnitsTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        database.close();
+        if (rows==1) return true;
+        else return false;
     }
     public void dbMessages(int rows,String type)
     {
@@ -200,11 +203,11 @@ public class UnitsTable {
             if (rs.next())
                 expirationDate = rs.getString(1);
             ps.close();
-            database.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        database.close();
         return expirationDate;
     }
     

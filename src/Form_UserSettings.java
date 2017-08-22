@@ -119,9 +119,25 @@ public class Form_UserSettings extends javax.swing.JFrame {
             }
         });
 
+        txtOldPass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtOldPassKeyPressed(evt);
+            }
+        });
+
         txtPass1.setForeground(new java.awt.Color(0, 163, 12));
+        txtPass1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPass1KeyPressed(evt);
+            }
+        });
 
         txtPass2.setForeground(new java.awt.Color(0, 163, 12));
+        txtPass2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPass2KeyPressed(evt);
+            }
+        });
 
         jLabel5.setText("New Password");
 
@@ -250,6 +266,10 @@ public class Form_UserSettings extends javax.swing.JFrame {
     }//GEN-LAST:event_lstMenuValueChanged
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        update();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void update(){
         if(isValidInputs()){
             lblErrorMessage.setVisible(false);
             JOptionPane.showMessageDialog(null, "Changes have been updated successfully!");
@@ -257,8 +277,8 @@ public class Form_UserSettings extends javax.swing.JFrame {
         }
         else
             lblErrorMessage.setVisible(true);
-    }//GEN-LAST:event_btnUpdateActionPerformed
-
+    }
+    
     private void lblLogoutDeviceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutDeviceMouseClicked
         boolean loggedOut = new LoginsTable().logout();
         if (loggedOut){
@@ -286,6 +306,21 @@ public class Form_UserSettings extends javax.swing.JFrame {
         JDialog form = new Dialog_AdminSettings(user);
         form.setVisible(true);
     }//GEN-LAST:event_lblAdminSettingsMouseClicked
+
+    private void txtOldPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOldPassKeyPressed
+        if (evt.getKeyCode() == 10)
+            update();
+    }//GEN-LAST:event_txtOldPassKeyPressed
+
+    private void txtPass1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPass1KeyPressed
+        if (evt.getKeyCode() == 10)
+            update();
+    }//GEN-LAST:event_txtPass1KeyPressed
+
+    private void txtPass2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPass2KeyPressed
+        if (evt.getKeyCode() == 10)
+            update();
+    }//GEN-LAST:event_txtPass2KeyPressed
 
  
     private boolean isValidInputs(){

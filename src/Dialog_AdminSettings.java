@@ -336,7 +336,7 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
         lblLoadStatus.setText("Adding user... (Please wait)");
         int isAdmin;
         if (chbSetAdmin.isSelected()) isAdmin = 1; else isAdmin=0;
-        User user = new User(txtUsername.getText(), txtName.getText(), txtPassword.getText(), isAdmin, this.unit_code);
+        User user = new User(txtUsername.getText(), txtPassword.getText(), txtName.getText(),isAdmin, this.unit_code);
         boolean inserted = usersTable.insert(user);
         if (inserted){
             txtName.setText("");
@@ -400,16 +400,25 @@ public class Dialog_AdminSettings extends javax.swing.JDialog {
         }
     }
     private void lblDeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblDeleteMouseClicked
-        
+        int response = JOptionPane.showConfirmDialog(null, "When you delete a user, all tasks assigned by or to that user will be deleted."
+                + "\nAre you sure you want to delete user and all tasks related?", "Deleting User", javax.swing.JOptionPane.YES_NO_OPTION);
+
+        //0 means yeas, 1 means no
+        // if response is NO, leave method
+        if(response == 1) return;
+   
+            
         if (tblUsers.getSelectedRowCount() == 1){
             lblLoadStatus.setText("Removing user... (Please wait)");
             int row = tblUsers.getSelectedRow();
             String username = (String) tblUsers.getValueAt(row, 0);
-            boolean deleted = new UsersTable().delete(username);
-            
+            boolean deleted;
+            deleted = new UsersTable().delete(username);
+            deleted = new TasksTable().deleteUserTasks(username);
             if(deleted){
                 tblUsers.remove(row);
                 lblLoadStatus.setText("");
+                JOptionPane.showMessageDialog(null, "User's account and all tasks related has been removed.");
             }
             else
                 JOptionPane.showMessageDialog(null, "Could not delete user at this time, please try again later");

@@ -25,7 +25,6 @@ public class TasksTable {
     
     
     TasksTable(){
-        database.connect();
         /*try {
             if (database.isConnected()) {
                 System.out.println("DB is connected!");
@@ -57,10 +56,10 @@ public class TasksTable {
             rows = ps.executeUpdate();
             dbMessages(rows,"inserted");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
-            database.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database.close();
         if(rows == 1) return true;
         else return false;
     }
@@ -88,10 +87,10 @@ public class TasksTable {
             rows=ps.executeUpdate();
             dbMessages(rows,"updated");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
-            database.close();
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database.close();
         if(rows == 1) return true;
         else return false;
     }
@@ -108,10 +107,11 @@ public class TasksTable {
             rows=ps.executeUpdate();
             dbMessages(rows,"updated");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
-            database.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database.close();
         if(rows == 1) return true;
         else return false;
     }
@@ -126,14 +126,35 @@ public class TasksTable {
             rows=ps.executeUpdate();
             dbMessages(rows,"deleted");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
             ps.close();
-            database.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database.close();
         if(rows == 1) return true;
         else return false;
     }
-        
+     
+    public boolean deleteUserTasks(String username){
+        int rows = 0;
+        try {
+            database.connect();
+            ps = database.prepareStatement("DELETE FROM Tasks WHERE assignor=? OR assignee=?");
+            ps.setString(1, username);
+            ps.setString(2, username);
+
+            ps.executeUpdate();
+            dbMessages(rows,"deleted");//SHOW MESSAGE IF THERE IS RECORED HAS BEEN UPDATED
+            rows = 1;
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UsersTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        database.close();
+        if(rows == 1) return true;
+        else return false;
+    }
+    
     public ArrayList Search(String unit_code, String criteria){
             
         try {
