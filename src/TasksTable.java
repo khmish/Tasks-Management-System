@@ -39,7 +39,7 @@ public class TasksTable {
         
         int rows = 0;
         try {
-            //database.connect();
+            database.connect();
             ps = database.prepareStatement("INSERT INTO Tasks VALUES(?,?,?,?,?,?,?,?,?,?,?)");
             ps.setLong(1, task.getTaskID());//get new id
             ps.setString(2, task.getCreatedDate());
