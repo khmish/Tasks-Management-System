@@ -1,3 +1,4 @@
+import java.awt.Toolkit;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -24,6 +25,11 @@ public class Main {
         }
         return;
         */
+        //java.net.URL url = ClassLoader.getSystemResource("/com/xyz/resources/camera.png");
+        if(!new Database().hasConnection()){
+            JOptionPane.showMessageDialog(null, "Program could not connect to internet. Please check your internet connection and try again!");
+            System.exit(0);
+        }
         Login log = new LoginsTable().getLog();
         //System.out.println(log.getUnitCode());
         java.awt.EventQueue.invokeLater(new Runnable() {

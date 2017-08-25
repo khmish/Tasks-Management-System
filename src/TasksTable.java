@@ -274,7 +274,7 @@ public class TasksTable {
     public ArrayList getClosedTasks(String assignor){
             
         try {
-            ps = database.prepareStatement("SELECT * FROM Tasks WHERE assignor=? AND status<>0");
+            ps = database.prepareStatement("SELECT * FROM Tasks WHERE assignor=? AND status>0");
             ps.setString(1, assignor);
             rs = ps.executeQuery();
             ArrayList tasks = new ArrayList();

@@ -1,5 +1,6 @@
 
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -22,6 +23,7 @@ public class Dialog_Task extends javax.swing.JDialog {
     public Dialog_Task(User u, Task t, Form_Tasks tf, int s){
         super(new java.awt.Frame(), true);
         initComponents();
+        
         new Tool().CenterForm(this);
         lblError.setVisible(false);
         
@@ -437,7 +439,8 @@ public class Dialog_Task extends javax.swing.JDialog {
         }
         else if(state == 3){
             task.setStatus(getSelectedRadio());
-            new TasksTable().update(task);
+            new TasksTable().updateStatus(task.getTaskID(), 1);
+            tasks_form.requestDeletition();
         }
         
         //exit form

@@ -45,7 +45,7 @@ public class Form_Tasks extends javax.swing.JFrame {
         lstMenu.setSelectedIndex(0);
         callRequestsToCloseTasks();
         lblLastUpdated.setText("Last updated: " + new Date().toString());
-        //updateClosedTaskTable();
+        updateClosedTaskTable();
         //btnClose.setEnabled(false);
         //btnReturn.setEnabled(false);
     }
@@ -81,8 +81,9 @@ public class Form_Tasks extends javax.swing.JFrame {
 
         for(int i = 0; i < closedTasks.size(); i++){
             Task task = (Task) closedTasks.get(i);
+            String status = task.getStatus()==1? "Completed":"Closed";
             Object[] row = { task.getTaskID(), task.getAssignee(), task.getSubject(), 
-                task.getDueDate(), task.getStatus()==1?"Completed":"Closed"};
+                task.getDueDate(), status};
                 dm.addRow(row);
         }
     } 
@@ -391,11 +392,25 @@ public class Form_Tasks extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tblTasksMouseClicked
     
+    //this method is called from Dialog_Task
+    //When assignor send task successfully, it will ask this for to insert it in "Sent Tasks" box
     public void insertRow(Task task){
         Object[] row = { task.getTaskID(), task.getAssignee(), task.getSubject(), task.getDueDate()};
         DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
         model.addRow(row);
+        //arrayList is syncrnoized with the box, (Same Index)
         this.sentTasks.add(task);
+    }
+    
+    //this method is called from Dialog_Task
+    //when assignee updated task from in progress to complete or to close, 
+    //  it will be sent back to assignor and row will be deleted from my task
+    public void requestDeletition(){
+        int row = tblTasks.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) tblTasks.getModel();
+        model.removeRow(row);
+        //arrayList is syncrnoized with the box, (Same Index)
+        this.receivedTasks.remove(row);
     }
         
     private boolean needsUpdateTasksTable=false;
@@ -461,9 +476,28 @@ public class Form_Tasks extends javax.swing.JFrame {
         
         int row = tblTasksToClose.getSelectedRow();
         long task_id = (long) tblTasksToClose.getValueAt(row, 0);
-        tasksTable.updateStatus(task_id, 0);
-        tblTasksToClose.remove(row);
+        boolean updated = tasksTable.updateStatus(task_id, 0);
+        
 
+        if (updated){
+            //transfering row back to "Sent Tasks" box
+            Object[] rowToBeTransfered = { tblTasksToClose.getValueAt(row, 0), tblTasksToClose.getValueAt(row, 1),
+                tblTasksToClose.getValueAt(row, 2), tblTasksToClose.getValueAt(row, 3)};
+            
+            DefaultTableModel sentTasksModel = (DefaultTableModel) tblTasks.getModel();
+            sentTasksModel.addRow(rowToBeTransfered);
+            tblTasks.repaint();
+            sentTasks.add(tasksTable.getTask(task_id));
+            
+            //Removing row from "Tasks To Close" box
+            DefaultTableModel tasksToClose = (DefaultTableModel) tblTasksToClose.getModel();
+            tasksToClose.removeRow(row);
+            tblTasksToClose.repaint();
+            closedTasks.remove(row);
+            
+            btnClose.setEnabled(false);
+            btnReturn.setEnabled(false);
+        }
     }//GEN-LAST:event_btnReturnActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -472,13 +506,24 @@ public class Form_Tasks extends javax.swing.JFrame {
         
         int row = tblTasksToClose.getSelectedRow();
         long task_id = (long) tblTasksToClose.getValueAt(row, 0);
-        int status = (int) tblTasksToClose.getValueAt(row, 3);
-        if (status == 1)
-            tasksTable.updateStatus(task_id, -1);
-        else if(status == -2)
-            tasksTable.updateStatus(task_id, -2);
+        String status = (String) tblTasksToClose.getValueAt(row, 4);
+        boolean updated = false;
+        if (status.equals("Completed"))
+            updated = tasksTable.updateStatus(task_id, -1);
+        else if(status.equals("Closed"))
+            updated = tasksTable.updateStatus(task_id, -2);
+        else
+            JOptionPane.showMessageDialog(null, "Error occure: Could not perform this action");
         
-        tblTasksToClose.remove(row);
+        if (updated){
+            DefaultTableModel model = (DefaultTableModel) tblTasksToClose.getModel();
+            model.removeRow(row);
+            tblTasksToClose.repaint();
+            
+            btnClose.setEnabled(false);
+            btnReturn.setEnabled(false);
+        }
+        
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void lblRefreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefreshMouseClicked
